@@ -1,0 +1,380 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SA Passport</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #1b4332;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    /* NAV */
+    .nav-header {
+      background: #0d2618;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #c8a84b;
+    }
+    .nav-logo {
+      color: #c8a84b;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+    .nav-links a:hover { color: #c8a84b; }
+
+    /* PAGE WRAPPER */
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    /* BADGES */
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .badge {
+      padding: 5px 14px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-verified   { background: #155724; color: #d4edda; border: 1px solid #28a745; }
+    .badge-unverified { background: #721c24; color: #f8d7da; border: 1px solid #dc3545; }
+    .badge-encrypted  { background: #856404; color: #fff3cd; border: 1px solid #c8a84b; }
+
+    /* PASSPORT DOCUMENT */
+    .passport-doc {
+      max-width: 700px;
+      width: 100%;
+      background: linear-gradient(160deg, #faf8f0 0%, #f0ede0 100%);
+      border-radius: 4px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    /* Green top border band */
+    .passport-top-band {
+      height: 8px;
+      background: linear-gradient(to right, #1b4332, #2d6a4f, #1b4332);
+    }
+
+    /* Header area */
+    .passport-header {
+      padding: 28px 40px 20px;
+      text-align: center;
+      border-bottom: 1px solid #d0c8b0;
+    }
+    .passport-crest {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .passport-country {
+      color: #1b4332;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .passport-country-af {
+      color: #4a7c59;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+    .passport-country-xh {
+      color: #4a7c59;
+      font-size: 10px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .passport-type-label {
+      color: #1b4332;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .biometric-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: #8b6914;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    /* CSS biometric symbol */
+    .biometric-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #c8a84b;
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .biometric-icon::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c8a84b;
+    }
+    .biometric-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid #c8a84b;
+    }
+
+    /* BIO DATA SECTION */
+    .passport-bio {
+      display: flex;
+      gap: 0;
+      padding: 24px 40px;
+      border-bottom: 1px solid #d0c8b0;
+    }
+    /* Photo */
+    .passport-photo {
+      flex-shrink: 0;
+      width: 140px;
+      height: 180px;
+      background: #c8c8c8;
+      border: 2px dashed #888;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 28px;
+    }
+    .passport-photo span {
+      color: #777;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+    /* Data fields */
+    .passport-fields {
+      flex: 1;
+    }
+    .pf-row {
+      border-top: 1px solid #d0c8b0;
+      padding: 6px 0;
+    }
+    .pf-row:first-child { border-top: none; }
+    .pf-label {
+      font-size: 8px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
+      display: block;
+    }
+    .pf-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      letter-spacing: 0.3px;
+      display: block;
+    }
+    .pf-value-small {
+      font-size: 11px;
+    }
+
+    /* MRZ ZONE */
+    .mrz-zone {
+      background: #0a1628;
+      padding: 14px 20px;
+      border-radius: 0 0 4px 4px;
+    }
+    .mrz-line {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #fff;
+      letter-spacing: 1.5px;
+      line-height: 1.8;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .mrz-label {
+      font-size: 8px;
+      color: #667;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    /* Bottom band */
+    .passport-bottom-band {
+      height: 8px;
+      background: linear-gradient(to right, #1b4332, #2d6a4f, #1b4332);
+    }
+
+    .back-btn-wrap {
+      margin-top: 32px;
+      text-align: center;
+    }
+    .back-btn {
+      display: inline-block;
+      background: #0d2618;
+      color: #c8a84b;
+      border: 2px solid #c8a84b;
+      padding: 10px 28px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: #c8a84b; color: #0d2618; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-header">
+    <a href="/" class="nav-logo">eDigital</a>
+    <div class="nav-links">
+      <a href="/dashboard/">Dashboard</a>
+      <a href="/logout/">Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <div class="badge-row">
+      {% if is_verified %}
+        <span class="badge badge-verified">Verified</span>
+      {% else %}
+        <span class="badge badge-unverified">Unverified</span>
+      {% endif %}
+      <span class="badge badge-encrypted">Encrypted</span>
+    </div>
+
+    <div class="passport-doc">
+      <div class="passport-top-band"></div>
+
+      <!-- HEADER -->
+      <div class="passport-header">
+        <img class="passport-crest"
+             src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
+             alt="RSA Coat of Arms">
+        <div class="passport-country">Republic of South Africa</div>
+        <div class="passport-country-af">Republiek van Suid-Afrika</div>
+        <div class="passport-country-xh">uMzantsi Afrika</div>
+        <div class="passport-type-label">Passport / Paspoort</div>
+        <div class="biometric-row">
+          <span class="biometric-icon"></span>
+          <span>e-Passport</span>
+        </div>
+      </div>
+
+      <!-- BIO DATA -->
+      <div class="passport-bio">
+        <div class="passport-photo">
+          <span>Photograph</span>
+        </div>
+        <div class="passport-fields">
+          <div class="pf-row">
+            <span class="pf-label">Passport No / Paspoort Nr</span>
+            <span class="pf-value">{{ document.name|upper|truncatechars:10 }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Nationality / Nasionaliteit</span>
+            <span class="pf-value pf-value-small">South African / Suid-Afrikaans</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Surname / Van</span>
+            <span class="pf-value">{{ user.last_name|upper }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Given Names / Voorname</span>
+            <span class="pf-value">{{ user.first_name|upper }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Date of Birth / Geboortedatum</span>
+            <span class="pf-value">{{ user.date_of_birth|date:"d M Y"|default:"—" }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Sex / Geslag</span>
+            <span class="pf-value">M</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Place of Birth / Geboorteplek</span>
+            <span class="pf-value pf-value-small">Gauteng, South Africa</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Date of Issue / Datum van Uitreiking</span>
+            <span class="pf-value">{{ document.issue_date|date:"d M Y" }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Date of Expiry / Vervaldatum</span>
+            <span class="pf-value">{{ document.expiration_date|date:"d M Y"|default:"—" }}</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-label">Authority / Gesag</span>
+            <span class="pf-value pf-value-small">Department of Home Affairs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MRZ -->
+      <div class="mrz-zone">
+        <div class="mrz-label">Machine Readable Zone</div>
+        <div class="mrz-line">P&lt;ZAF{{ user.last_name|upper }}&lt;&lt;{{ user.first_name|upper }}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+        <div class="mrz-line">{{ document.name|upper|truncatechars:9 }}0ZAF{{ user.date_of_birth|date:"ymd"|default:"900515" }}0M{{ document.expiration_date|date:"ymd"|default:"290620" }}0&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6</div>
+      </div>
+
+      <div class="passport-bottom-band"></div>
+    </div>
+
+    <div class="back-btn-wrap">
+      <a href="/dashboard/" class="back-btn">Back to Dashboard</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

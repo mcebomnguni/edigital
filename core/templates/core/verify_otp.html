@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Two-Factor Authentication - eDigital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <style>
+    body { min-height: 100vh; background: linear-gradient(135deg, #e8f0e8 0%, #dce8f0 100%); display: flex; align-items: center; justify-content: center; }
+    .otp-card { background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); padding: 2.5rem 2rem; max-width: 420px; width: 100%; }
+    .otp-card h1 { font-size: 1.6rem; color: #1a1a2e; margin-bottom: 0.4rem; }
+    .otp-card p { color: #666; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .form-group input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 1.1rem; letter-spacing: 0.3rem; text-align: center; box-sizing: border-box; transition: border-color 0.2s; }
+    .form-group input:focus { outline: none; border-color: #003082; }
+    .btn-block { width: 100%; padding: 0.85rem; font-size: 1rem; font-weight: 600; background: #003082; color: white; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+    .btn-block:hover { background: #002060; }
+    .error-box { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6cb; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.9rem; }
+    .debug-box { background: #fffde7; color: #5d4037; border: 1px solid #ffe082; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.9rem; }
+    .debug-box strong { font-size: 1.5rem; letter-spacing: 0.3rem; display: block; margin-top: 0.25rem; color: #1a1a2e; }
+    .back-link { display: block; text-align: center; margin-top: 1.25rem; color: #003082; font-size: 0.9rem; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+    .shield-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="otp-card">
+    <div class="shield-icon" aria-hidden="true">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#003082" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <h1>Verify Your Identity</h1>
+    <p>A one-time password was sent to your registered email address. Enter it below to continue.</p>
+
+    {% if debug_otp %}
+    <div class="debug-box">
+      <span>DEV MODE — your OTP is:</span>
+      <strong>{{ debug_otp }}</strong>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error-box">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" autocomplete="off">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="otp">One-Time Password</label>
+        <input type="text" id="otp" name="otp" placeholder="000000" maxlength="8" inputmode="numeric" autofocus>
+      </div>
+      <button type="submit" class="btn-block">Verify</button>
+    </form>
+
+    <a href="/login/" class="back-link">Back to login</a>
+  </div>
+</body>
+</html>

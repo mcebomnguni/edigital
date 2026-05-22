@@ -1,0 +1,615 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SA Smart ID Card - eDigital</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Modern CSS Framework -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <style>
+    /* Smart ID Card specific styles */
+    .smart-id-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-header {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md) 0;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 0;
+    }
+
+    .id-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl);
+    }
+
+    .id-showcase {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+
+    .card-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .card-wrapper {
+      width: 500px;
+      height: 320px;
+      perspective: 1200px;
+    }
+
+    .id-card-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .card-wrapper:hover .id-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .id-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-lg);
+      box-sizing: border-box;
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      border: 1px solid var(--gray-200);
+    }
+
+    .front {
+      color: var(--gray-800);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: stretch;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+      color: var(--gray-800);
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .rsa-logo {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      opacity: 0.8;
+    }
+
+    .flag-watermark {
+      position: absolute;
+      bottom: var(--space-md);
+      right: var(--space-md);
+      width: 60px;
+      height: 40px;
+      opacity: 0.1;
+    }
+
+    .id-photo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .id-photo {
+      width: 120px;
+      height: 150px;
+      background: linear-gradient(135deg, var(--gray-200), var(--gray-300));
+      border: 3px solid var(--gray-400);
+      border-radius: var(--radius-md);
+      background-image: url('https://i.imgur.com/l60Hf.png');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(100%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .photo-label {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .details-section {
+      flex: 1;
+      padding-left: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-header {
+      margin-bottom: var(--space-lg);
+    }
+
+    .card-header h6 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sa-blue);
+      margin: 0 0 var(--space-xs) 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-header .subtitle {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .info-grid {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 80px;
+    }
+
+    .info-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .signature-section {
+      margin-top: var(--space-md);
+    }
+
+    .signature-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--space-xs);
+    }
+
+    .signature-line {
+      font-style: italic;
+      color: var(--gray-700);
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--gray-300);
+      padding-bottom: var(--space-xs);
+      width: 200px;
+    }
+
+    .security-features {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--gray-100);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-lg);
+      font-size: 0.625rem;
+      font-weight: 500;
+      color: var(--gray-600);
+    }
+
+    .back-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-lg);
+      height: 100%;
+    }
+
+    .department-header {
+      text-align: center;
+    }
+
+    .department-header h6 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sa-blue);
+      margin: 0;
+    }
+
+    .barcode-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .barcode-label {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .barcode-image {
+      width: 80%;
+      height: 40px;
+      background: var(--gray-900);
+      border-radius: var(--radius-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .barcode-image::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        white 2px,
+        white 4px
+      );
+    }
+
+    .qr-photo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    .qr-code {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border: 2px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      color: var(--gray-500);
+      text-align: center;
+    }
+
+    .back-photo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--gray-200), var(--gray-300));
+      border: 2px solid var(--gray-400);
+      border-radius: var(--radius-md);
+      background-image: url('https://i.imgur.com/l60Hf.png');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(100%);
+    }
+
+    .card-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .info-section {
+      background: white;
+      border-radius: var(--radius-2xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+
+    .info-section h2 {
+      font-size: 1.5rem;
+      color: var(--gray-900);
+      margin-bottom: var(--space-lg);
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--success);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+    }
+
+    .flip-hint {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 0.875rem;
+      font-style: italic;
+      margin-top: var(--space-md);
+    }
+
+    @media (max-width: 1024px) {
+      .id-showcase {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+      
+      .card-wrapper {
+        width: 450px;
+        height: 288px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .card-wrapper {
+        width: 100%;
+        max-width: 400px;
+        height: 256px;
+      }
+      
+      .id-face {
+        padding: var(--space-md);
+      }
+      
+      .details-section {
+        padding-left: var(--space-md);
+      }
+      
+      .id-photo {
+        width: 100px;
+        height: 125px;
+      }
+      
+      .info-section {
+        padding: var(--space-lg);
+      }
+    }
+  </style>
+</head>
+<body class="smart-id-page">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="container">
+      <div class="page-nav">
+        <h1 class="page-title">Smart ID Card</h1>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+            <li><a href="/profile/" class="nav-link">Profile</a></li>
+            <li><a href="/logout/" class="nav-link btn btn-danger btn-sm">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="id-container">
+    <div class="id-showcase">
+      <!-- ID Card Section -->
+      <div class="card-section">
+        <div class="card-wrapper">
+          <div class="id-card-inner">
+            <!-- FRONT SIDE -->
+            <div class="id-face front">
+              <!-- RSA Coat of Arms -->
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg" class="rsa-logo" alt="RSA Coat of Arms">
+              
+              <div class="details-section">
+                <div class="card-header">
+                  <h6>SOUTH AFRICAN SMART ID CARD</h6>
+                  <div class="subtitle">National Identity Document</div>
+                </div>
+                
+                <div class="info-grid">
+                  <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{{ user.get_full_name }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">ID No:</span>
+                    <span class="info-value">{% if smart_id %}{{ smart_id.id_number }}{% else %}—{% endif %}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">DOB:</span>
+                    <span class="info-value">{{ user.date_of_birth|date:"Y-m-d"|default:"—" }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Gender:</span>
+                    <span class="info-value">Male</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Nationality:</span>
+                    <span class="info-value">South African</span>
+                  </div>
+                </div>
+
+                <div class="signature-section">
+                  <div class="signature-label">Signature</div>
+                  <div class="signature-line">{{ user.first_name|first }}. {{ user.last_name }}</div>
+                </div>
+              </div>
+              
+              <div class="id-photo-section">
+                <div class="id-photo"></div>
+                <div class="photo-label">Photograph</div>
+              </div>
+              
+              <!-- SA Flag Watermark -->
+              <img src="https://flagcdn.com/w320/za.png" class="flag-watermark" alt="SA Flag">
+              
+              <!-- Security Features -->
+              <div class="security-features">
+                <div class="security-badge">Secure</div>
+                <div class="security-badge">Verified</div>
+              </div>
+            </div>
+
+            <!-- BACK SIDE -->
+            <div class="id-face back">
+              <!-- RSA Coat of Arms -->
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg" class="rsa-logo" alt="RSA Coat of Arms">
+
+              <div class="back-content">
+                <div class="department-header">
+                  <h6>Department of Home Affairs</h6>
+                  <div class="subtitle">Republic of South Africa</div>
+                </div>
+
+                <!-- PDF417 Barcode -->
+                <div class="barcode-section">
+                  <div class="barcode-label">PDF417 Barcode</div>
+                  <div class="barcode-image"></div>
+                </div>
+
+                <!-- QR Code and Back Photo -->
+                <div class="qr-photo-container">
+                  <div class="qr-code">
+                    QR Code<br>{% if smart_id %}ID:{{ smart_id.id_number }}{% else %}ID:—{% endif %}
+                  </div>
+                  <div class="back-photo"></div>
+                </div>
+
+                <div class="card-footer">
+                  {% if smart_id %}Issued: {{ smart_id.issued_on|date:"Y-m-d" }}{% endif %}
+                </div>
+              </div>
+
+              <!-- SA Flag Watermark -->
+              <img src="https://flagcdn.com/w320/za.png" class="flag-watermark" alt="SA Flag">
+            </div>
+          </div>
+        </div>
+        
+        <div class="flip-hint">
+          Hover over the card to see the back side
+        </div>
+      </div>
+
+      <!-- Information Section -->
+      <div class="info-section">
+        <h2>Digital Smart ID Features</h2>
+        <p>Your South African Smart ID Card incorporates advanced security features and biometric technology for maximum protection.</p>
+        
+        <ul class="feature-list">
+          <li>Embedded chip with biometric data storage</li>
+          <li>QR code for instant digital verification</li>
+          <li>PDF417 barcode with encrypted information</li>
+          <li>Holographic security elements</li>
+          <li>UV ink features for authentication</li>
+          <li>Machine-readable zone (MRZ)</li>
+          <li>Government-issued digital signature</li>
+          <li>Integrated with Home Affairs database</li>
+        </ul>
+
+        <div class="action-buttons">
+          <a href="/dashboard/" class="btn btn-primary">Back to Dashboard</a>
+          <a href="/profile/" class="btn btn-outline">Update Profile</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="header">
+    <div class="container text-center">
+      <p>&copy; 2026 eDigital. All Rights Reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

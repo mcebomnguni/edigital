@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - eDigital</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Modern CSS Framework -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <style>
+    /* Page-specific styles */
+    .login-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl);
+    }
+
+    .login-content {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+
+    .login-form-section {
+      max-width: 480px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .login-header h1 {
+      font-size: 2rem;
+      margin-bottom: var(--space-sm);
+      background: linear-gradient(135deg, var(--sa-light-blue), var(--sa-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .login-header p {
+      color: var(--gray-600);
+      font-size: 1rem;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-2xl);
+      border: 1px solid var(--gray-200);
+    }
+
+    .biometric-btn {
+      width: 100%;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border: 2px dashed var(--gray-300);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      font-weight: 500;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .biometric-btn:hover {
+      background: var(--primary-50);
+      border-color: var(--primary-300);
+      color: var(--primary-700);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .biometric-btn::before {
+      content: "";
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: var(--space-lg) 0;
+      color: var(--gray-400);
+      font-size: 0.875rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--gray-300);
+    }
+
+    .divider span {
+      padding: 0 var(--space-md);
+    }
+
+    .info-section {
+      background: white;
+      border-radius: var(--radius-2xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+
+    .info-section h2 {
+      color: var(--gray-900);
+      margin-bottom: var(--space-lg);
+      font-size: 1.5rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: var(--space-lg) 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      color: var(--gray-600);
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--success);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--gray-100);
+      color: var(--gray-700);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-lg);
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: var(--space-md);
+    }
+
+    .security-badge::before {
+      content: "";
+    }
+
+    @media (max-width: 968px) {
+      .login-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+      
+      .login-form-section {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .login-container {
+        padding: var(--space-lg);
+      }
+      
+      .form-card,
+      .info-section {
+        padding: var(--space-lg);
+      }
+    }
+  </style>
+</head>
+
+<body class="login-page">
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo">eDigital</a>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="/about/" class="nav-link">About</a></li>
+            <li><a href="/contact/" class="nav-link">Contact</a></li>
+            <li><a href="/register/" class="nav-link">Register</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="login-container">
+    <div class="login-content">
+      <!-- Login Form Section -->
+      <div class="login-form-section">
+        <div class="login-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to access your digital documents</p>
+        </div>
+
+        <div class="form-card">
+          <form action="/login/" method="POST" novalidate>
+            {% csrf_token %}
+            
+            <div class="form-group">
+              <label for="username" class="form-label">Username or Email</label>
+              <input 
+                type="text" 
+                name="username" 
+                id="username" 
+                class="form-control" 
+                placeholder="Enter your username or email"
+                required 
+                aria-required="true" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Enter your password"
+                required 
+                aria-required="true" 
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Sign In
+            </button>
+
+            <div class="divider">
+              <span>OR</span>
+            </div>
+
+            <button type="button" class="biometric-btn">
+              Scan Fingerprint
+            </button>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-0">Don't have an account? </p>
+            <a href="/register/" class="btn btn-outline btn-block mt-2">Create Account</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Section -->
+      <div class="info-section">
+        <h2>South Africa's Trusted Digital Identity Platform</h2>
+        <p>Secure, government-verified digital documents with cutting-edge biometric protection.</p>
+        
+        <ul class="feature-list">
+          <li>National Smart ID Cards with QR verification</li>
+          <li>Digital Passports and travel documents</li>
+          <li>Birth, Marriage & Death certificates</li>
+          <li>Integrated Driver's License services</li>
+          <li>End-to-end encryption protection</li>
+          <li>24/7 biometric verification</li>
+        </ul>
+
+        <div class="security-badge">
+          Bank-level security encryption
+        </div>
+
+        <div class="security-badge">
+          Government verified & approved
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="header">
+    <div class="container text-center">
+      <p>&copy; 2026 eDigital. All Rights Reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

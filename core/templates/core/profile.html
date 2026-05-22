@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile - eDigital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <style>
+    body { min-height: 100vh; background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%); display: flex; flex-direction: column; }
+    main { flex: 1; padding: 2.5rem 1rem; }
+
+    /* Hero banner */
+    .profile-hero {
+      background: linear-gradient(135deg, #002244 0%, #003d73 100%);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-hero::before {
+      content: "";
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .profile-hero::after {
+      content: "";
+      position: absolute;
+      right: 60px; bottom: -60px;
+      width: 280px; height: 280px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+    .avatar {
+      width: 90px; height: 90px;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; font-weight: 700; color: white;
+      flex-shrink: 0;
+      letter-spacing: -1px;
+    }
+    .hero-info h1 { font-size: 1.6rem; color: white; margin-bottom: 0.25rem; }
+    .hero-info .username { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
+    .hero-badges { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .badge { font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 20px; }
+    .badge-green { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-gold  { background: rgba(255,182,18,0.2);  color: #fcd34d; border: 1px solid rgba(255,182,18,0.3); }
+    .badge-gray  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: white; border-radius: 14px; padding: 1.25rem 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: #002244; line-height: 1; }
+    .stat-label { font-size: 0.78rem; color: #6b7280; margin-top: 0.3rem; font-weight: 500; }
+
+    /* Info card */
+    .info-card { background: white; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 1.5rem; }
+    .info-card-header { padding: 1.1rem 1.5rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.6rem; }
+    .info-card-header h3 { font-size: 1rem; color: #1a1a2e; margin: 0; }
+    .info-card-header .icon { width: 28px; height: 28px; background: #f0f4ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .info-rows { padding: 0.25rem 0; }
+    .info-row { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; border-bottom: 1px solid #f8f8f8; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row-label { font-size: 0.82rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+    .info-row-value { font-size: 0.95rem; font-weight: 500; color: #1a1a2e; }
+
+    /* Actions */
+    .action-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    @media (max-width: 600px) {
+      .profile-hero { flex-direction: column; text-align: center; }
+      .hero-badges { justify-content: center; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/dashboard/" class="logo">eDigital</a>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+            <li><a href="/id/" class="nav-link">Smart ID</a></li>
+            <li><a href="/renewals/" class="nav-link">Renewals</a></li>
+            <li><a href="/logout/" class="nav-link btn btn-danger btn-sm">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" style="max-width:760px;">
+
+      <!-- Hero -->
+      <div class="profile-hero">
+        <div class="avatar">
+          {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+        </div>
+        <div class="hero-info">
+          <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
+          <div class="username">@{{ request.user.username }}</div>
+          <div class="hero-badges">
+            {% if request.user.is_activated %}
+              <span class="badge badge-green">Activated</span>
+            {% else %}
+              <span class="badge badge-gray">Pending Activation</span>
+            {% endif %}
+            {% if request.user.is_admin %}
+              <span class="badge badge-gold">Admin</span>
+            {% endif %}
+            <span class="badge badge-gray">South African Citizen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">{{ doc_count }}</div>
+          <div class="stat-label">Documents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ renewal_count }}</div>
+          <div class="stat-label">Renewals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{% if request.user.is_activated %}1{% else %}0{% endif %}</div>
+          <div class="stat-label">Active ID</div>
+        </div>
+      </div>
+
+      <!-- Personal Info -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="icon">
+            <svg width="14" height="14" fill="none" stroke="#003d73" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h3>Personal Information</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="info-row-label">First Name</span>
+            <span class="info-row-value">{{ request.user.first_name|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Last Name</span>
+            <span class="info-row-value">{{ request.user.last_name|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Date of Birth</span>
+            <span class="info-row-value">{{ request.user.date_of_birth|date:"d F Y"|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Nationality</span>
+            <span class="info-row-value">South African</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="icon">
+            <svg width="14" height="14" fill="none" stroke="#003d73" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Account Details</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="info-row-label">Username</span>
+            <span class="info-row-value">{{ request.user.username }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Email Address</span>
+            <span class="info-row-value">{{ request.user.email|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Account Status</span>
+            <span class="info-row-value">
+              {% if request.user.is_activated %}
+                <span style="color:#10b981;font-weight:600;">Active</span>
+              {% else %}
+                <span style="color:#f59e0b;font-weight:600;">Pending</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Two-Factor Auth</span>
+            <span class="info-row-value">
+              {% if request.user.secret_key %}
+                <span style="color:#10b981;font-weight:600;">Enabled</span>
+              {% else %}
+                <span style="color:#ef4444;font-weight:600;">Disabled</span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <a href="/dashboard/" class="btn btn-primary">Back to Dashboard</a>
+        <a href="/id/" class="btn btn-outline">View Smart ID</a>
+        <a href="/renewals/" class="btn btn-secondary">My Renewals</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="header" style="margin-top:auto;">
+    <div class="container text-center">
+      <p>&copy; 2026 eDigital. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

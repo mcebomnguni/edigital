@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Digital Documentation System</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <ul class="navbar-menu">
+                <li><a href="/" class="navbar-link">Home</a></li>
+                <li><a href="/admin/users/" class="navbar-link">Users</a></li>
+                <li><a href="/admin/documents/" class="navbar-link">Documents</a></li>
+                <li><a href="/logout/" class="navbar-link btn-logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+
+        <section class="dashboard-section">
+            <h2>User Management</h2>
+            <ul class="dashboard-links">
+                <li><a href="/admin/users/add/" class="btn">Add New User</a></li>
+                <li><a href="/admin/users/" class="btn">View Users</a></li>
+            </ul>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Document Management</h2>
+            <ul class="dashboard-links">
+                <li><a href="/admin/documents/upload/" class="btn">Upload New Document</a></li>
+                <li><a href="/admin/documents/" class="btn">View Documents</a></li>
+            </ul>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>System Statistics</h2>
+            <p>Here you can view user statistics and document usage analytics.</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Digital Documentation System. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

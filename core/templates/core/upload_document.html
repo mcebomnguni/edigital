@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <ul class="navbar-menu">
+                <li><a href="/" class="navbar-link">Home</a></li>
+                <li><a href="/dashboard/" class="navbar-link">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="upload-main">
+        <h1>Upload Document</h1>
+        <form action="/documents/upload/" method="POST" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="document_type">Document Type:</label>
+                <select id="document_type" name="document_type" required>
+                    <option value="passport">Passport</option>
+                    <option value="drivers_license">Driver's License</option>
+                    <option value="birth_certificate">Birth Certificate</option>
+                    <option value="marriage_certificate">Marriage Certificate</option>
+                    <option value="visa">Visa</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="document_file">Upload Document:</label>
+                <input type="file" id="document_file" name="document_file" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Upload Document</button>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Digital Documentation System. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

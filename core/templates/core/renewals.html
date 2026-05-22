@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document Renewals - eDigital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/dashboard/" class="logo">eDigital</a>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+            <li><a href="/profile/" class="nav-link">Profile</a></li>
+            <li><a href="/id/" class="nav-link">Smart ID</a></li>
+            <li><a href="/logout/" class="nav-link btn btn-danger btn-sm">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 2rem 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">Document Renewals</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="margin-bottom:1rem; padding:.75rem 1rem; border-radius:8px; background:#e8f5e9; color:#2e7d32;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if renewals %}
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; background:white; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.08);">
+          <thead>
+            <tr style="background:#f8f9fa; border-bottom:2px solid #e9ecef;">
+              <th style="padding:.75rem 1rem; text-align:left;">Document Type</th>
+              <th style="padding:.75rem 1rem; text-align:left;">Document Number</th>
+              <th style="padding:.75rem 1rem; text-align:left;">Requested On</th>
+              <th style="padding:.75rem 1rem; text-align:left;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for renewal in renewals %}
+            <tr style="border-bottom:1px solid #f0f0f0;">
+              <td style="padding:.75rem 1rem;">{{ renewal.document_type }}</td>
+              <td style="padding:.75rem 1rem;">{{ renewal.document_number }}</td>
+              <td style="padding:.75rem 1rem;">{{ renewal.renewal_requested_on|date:"d M Y" }}</td>
+              <td style="padding:.75rem 1rem;">
+                {% if renewal.is_approved %}
+                  <span style="color:#2e7d32; font-weight:600;">Approved</span>
+                {% else %}
+                  <span style="color:#f57c00; font-weight:600;">Pending</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div style="background:white; border-radius:12px; padding:3rem; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.08);">
+        <p style="color:#6c757d; font-size:1.1rem;">You have no renewal requests yet.</p>
+        <a href="/dashboard/" class="btn btn-primary" style="margin-top:1rem;">Back to Dashboard</a>
+      </div>
+    {% endif %}
+  </main>
+</body>
+</html>

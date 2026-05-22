@@ -1,0 +1,450 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - eDigital</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Modern CSS Framework -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        /* Dashboard-specific styles */
+        .dashboard-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .user-details h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .user-details p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: var(--space-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, var(--sa-light-blue), var(--sa-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .stat-icon.documents {
+            background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+            color: var(--primary-700);
+        }
+
+        .stat-icon.renewals {
+            background: linear-gradient(135deg, var(--warning), #f59e0b);
+            color: white;
+        }
+
+        .stat-icon.verified {
+            background: linear-gradient(135deg, var(--success), #10b981);
+            color: white;
+        }
+
+        .stat-icon.security {
+            background: linear-gradient(135deg, var(--error), #ef4444);
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .documents-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .document-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .document-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .document-card:hover {
+            background: white;
+            border-color: var(--primary-300);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .document-icon.id-card {
+            background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+            color: var(--primary-700);
+        }
+
+        .document-icon.passport {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .document-icon.drivers {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .document-icon.certificate {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .document-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-xs);
+        }
+
+        .document-status {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: var(--space-sm);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-lg);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: var(--success);
+            background: rgb(16 185 129 / 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.expiring {
+            background: var(--warning);
+            background: rgb(245 158 11 / 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.expired {
+            background: var(--error);
+            background: rgb(239 68 68 / 0.1);
+            color: var(--error);
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-nav {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+
+            .dashboard-content {
+                padding: var(--space-lg);
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-md);
+            }
+
+            .document-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="dashboard-nav">
+                <div class="user-info">
+                    <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    <div class="user-details">
+                        <h3>{{ user.username }}</h3>
+                        <p>Digital Identity Verified</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+                        <li><a href="/profile/" class="nav-link">Profile</a></li>
+                        <li><a href="/upload/" class="nav-link">Upload</a></li>
+                        <li><a href="/contact/" class="nav-link">Contact</a></li>
+                        <li><a href="/logout/" class="nav-link btn btn-danger btn-sm">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1>Welcome back, {{ user.username }}!</h1>
+            <p>Manage your digital documents and identity services from your secure dashboard.</p>
+        </section>
+
+        <!-- Statistics Grid -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon documents">DOC</div>
+                <div class="stat-value">{{ documents.count }}</div>
+                <div class="stat-label">Active Documents</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon renewals">REN</div>
+                <div class="stat-value">{{ documents|length }}</div>
+                <div class="stat-label">Total Documents</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon verified">VER</div>
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Verification Score</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon security">SEC</div>
+                <div class="stat-value">Active</div>
+                <div class="stat-label">Security Status</div>
+            </div>
+        </section>
+
+        <!-- Documents Section -->
+        <section class="documents-section">
+            <div class="section-header">
+                <h2>My Digital Documents</h2>
+                <a href="/upload/" class="btn btn-primary">Upload New Document</a>
+            </div>
+
+            <div class="document-grid">
+                {% for doc in documents %}
+                <div class="document-card" onclick="window.location.href='/documents/{{ doc.pk }}/'">
+                    <div class="document-icon
+                        {% if doc.document_type == 'id' %}id-card
+                        {% elif doc.document_type == 'passport' %}passport
+                        {% elif doc.document_type == 'drivers_license' %}drivers
+                        {% else %}certificate{% endif %}">
+                        {% if doc.document_type == 'id' %}ID
+                        {% elif doc.document_type == 'passport' %}PP
+                        {% elif doc.document_type == 'drivers_license' %}DL
+                        {% elif doc.document_type == 'birth_certificate' %}BC
+                        {% elif doc.document_type == 'marriage_certificate' %}MC
+                        {% elif doc.document_type == 'divorce_decree' %}DD
+                        {% else %}DOC{% endif %}
+                    </div>
+                    <div class="document-title">{{ doc.name }}</div>
+                    <div class="document-status">{{ doc.get_document_type_display }}</div>
+                    <div class="status-badge {% if doc.status == 'active' %}active{% elif doc.status == 'expired' %}expired{% else %}expiring{% endif %}">
+                        {{ doc.get_status_display }}
+                    </div>
+                </div>
+                {% empty %}
+                <p style="color: var(--gray-500);">No documents found. Upload one to get started.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Quick Actions Section -->
+        <section class="quick-actions">
+            <div class="section-header">
+                <h2>Quick Actions</h2>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/renewals/" class="btn btn-primary btn-lg">Renew Documents</a>
+                <a href="/id/" class="btn btn-outline btn-lg">View Smart ID</a>
+                <a href="/profile/" class="btn btn-secondary btn-lg">Update Profile</a>
+                <a href="/contact/" class="btn btn-ghost btn-lg">Get Support</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="header">
+        <div class="container text-center">
+            <p>&copy; 2026 eDigital. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

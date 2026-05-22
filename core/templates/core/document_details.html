@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ document.name }} - Document Details</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        .detail-page { min-height: 100vh; background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%); }
+        .detail-card { background: white; border-radius: var(--radius-2xl); box-shadow: var(--shadow-xl); padding: var(--space-2xl); max-width: 640px; margin: var(--space-2xl) auto; }
+        .detail-card h1 { font-size: 1.75rem; margin-bottom: var(--space-xl); color: var(--gray-900); }
+        .detail-row { display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-100); }
+        .detail-row:last-of-type { border-bottom: none; }
+        .detail-label { font-weight: 600; color: var(--gray-600); }
+        .detail-value { color: var(--gray-900); }
+        .approval-row { margin-top: var(--space-lg); padding: var(--space-md); background: var(--gray-50); border-radius: var(--radius-lg); }
+    </style>
+</head>
+
+<body class="detail-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/dashboard/" class="logo">eDigital</a>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+                        <li><a href="/renewals/" class="nav-link">Renewals</a></li>
+                        <li><a href="/logout/" class="nav-link btn btn-danger btn-sm">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="detail-card">
+            <h1>{{ document.name }}</h1>
+
+            <div class="detail-row">
+                <span class="detail-label">Document Type</span>
+                <span class="detail-value">{{ document.get_document_type_display }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">{{ document.get_status_display }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Issue Date</span>
+                <span class="detail-value">{{ document.issue_date|date:"d M Y" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Expiration Date</span>
+                <span class="detail-value">{% if document.expiration_date %}{{ document.expiration_date|date:"d M Y" }}{% else %}—{% endif %}</span>
+            </div>
+
+            <div class="approval-row">
+                <div class="detail-row">
+                    <span class="detail-label">Admin Approved</span>
+                    <span class="detail-value">{% if document.is_admin_approved %}Yes{% else %}No{% endif %}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Department Approved</span>
+                    <span class="detail-value">{% if document.is_department_approved %}Yes{% else %}No{% endif %}</span>
+                </div>
+            </div>
+
+            {% if document.document_image %}
+            <div style="margin-top: var(--space-xl);">
+                <p class="detail-label" style="margin-bottom: var(--space-sm);">Document Image</p>
+                <img src="{{ document.document_image.url }}" alt="{{ document.name }}"
+                     style="max-width:100%; border-radius: var(--radius-lg); border: 1px solid var(--gray-200);">
+            </div>
+            {% else %}
+            <div style="margin-top: var(--space-xl); padding: var(--space-lg); background: var(--gray-50); border-radius: var(--radius-lg); text-align: center; color: var(--gray-500);">
+                No document image uploaded. Use <a href="/upload/">Upload New Document</a> to attach one.
+            </div>
+            {% endif %}
+
+            <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md);">
+                <a href="/renewals/" class="btn btn-primary">Request Renewal</a>
+                <a href="/dashboard/" class="btn btn-outline">Back to Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="header" style="margin-top: auto;">
+        <div class="container text-center">
+            <p>&copy; 2026 eDigital. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
