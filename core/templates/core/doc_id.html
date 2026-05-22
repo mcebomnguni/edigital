@@ -4,67 +4,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SA Smart ID Card</title>
+  <title>SA Smart ID Card &mdash; eDigital</title>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #1a1a2e;
+      background: #0f1923;
       min-height: 100vh;
       color: #333;
     }
 
-    /* NAV */
-    .nav-header {
-      background: #003c28;
-      padding: 12px 24px;
+    /* ── SITE HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #002244, #003d73);
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 3px solid #ffb612;
     }
-    .nav-logo {
-      color: #ffb612;
-      font-size: 22px;
+    .logo {
+      color: #FFB612;
+      font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: 1px;
       text-decoration: none;
+      letter-spacing: 1px;
     }
-    .nav-links a {
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+    }
+    .nav-link {
       color: #fff;
       text-decoration: none;
-      margin-left: 20px;
       font-size: 14px;
+      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 5px;
+      transition: background 0.2s;
     }
-    .nav-links a:hover { color: #ffb612; }
+    .nav-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-    /* PAGE */
+    /* ── PAGE ── */
     .page-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px 60px;
-    }
-    .page-title {
-      color: #ffb612;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .page-subtitle {
-      color: #aaa;
-      font-size: 12px;
-      margin-bottom: 14px;
+      padding: 36px 20px 64px;
     }
 
-    /* BADGES */
-    .badge-row {
+    .page-title {
+      color: #FFB612;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    .page-subtitle {
+      color: #8899aa;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 28px;
       flex-wrap: wrap;
       justify-content: center;
@@ -75,25 +92,26 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
-    .badge-verified   { background: #155724; color: #d4edda; border: 1px solid #28a745; }
-    .badge-unverified { background: #721c24; color: #f8d7da; border: 1px solid #dc3545; }
-    .badge-encrypted  { background: #856404; color: #fff3cd; border: 1px solid #ffb612; }
+    .badge-verified   { background: #0d3321; color: #6fcf97; border: 1px solid #27ae60; }
+    .badge-unverified { background: #3b0a0a; color: #f8a0a0; border: 1px solid #e03c31; }
+    .badge-encrypted  { background: #2e1f00; color: #FFB612; border: 1px solid #FFB612; }
+    .badge-status     { background: #1a2236; color: #90b8e0; border: 1px solid #4a6fa5; }
 
-    /* FLIP CARD */
+    /* ── FLIP CARD SETUP ── */
     .flip-scene {
       width: 500px;
       height: 315px;
-      perspective: 1200px;
-      cursor: pointer;
+      perspective: 1400px;
+      cursor: default;
     }
     .flip-card {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.75s ease;
+      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .flip-scene:hover .flip-card {
       transform: rotateY(180deg);
@@ -103,136 +121,148 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 12px;
+      -webkit-backface-visibility: hidden;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
     }
 
-    /* ===== FRONT FACE ===== */
+    /* ═══════════════════════════════
+       FRONT FACE
+    ═══════════════════════════════ */
     .card-front {
-      background: linear-gradient(to bottom, #003c28 0%, #003c28 30%, #006d3b 30%, #006d3b 100%);
+      background: linear-gradient(155deg, #004d26 0%, #006633 40%, #003d1a 100%);
       display: flex;
       flex-direction: column;
+      position: relative;
     }
 
-    /* Top bar */
-    .card-top-bar {
-      width: 100%;
-      height: 32px;
-      background: #001f0f;
+    /* Subtle guilloche watermark overlay */
+    .card-front::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60px 60px at 30% 40%, rgba(255,255,255,0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 80px 80px at 70% 60%, rgba(255,255,255,0.02) 0%, transparent 70%),
+        radial-gradient(ellipse 40px 40px at 50% 20%, rgba(255,182,18,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header strip: republic name */
+    .front-header {
+      position: relative;
+      z-index: 1;
+      height: 30px;
+      background: rgba(0,0,0,0.35);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 12px 0 20px;
+      padding: 0 44px 0 20px;
       flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,182,18,0.3);
     }
-    .card-top-bar .left-text {
-      color: #ffb612;
+    .front-header-left {
+      flex: 1;
+    }
+    .republic-name {
+      color: #fff;
       font-size: 9px;
       font-weight: 700;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
+      display: block;
+      line-height: 1.2;
     }
-    .card-top-bar .right-text {
-      color: #fff;
-      font-size: 8px;
-      letter-spacing: 0.5px;
+    .republic-name-sub {
+      color: rgba(255,255,255,0.55);
+      font-size: 7px;
+      letter-spacing: 0.4px;
+      display: block;
+      line-height: 1.2;
+    }
+    .front-header-crest {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.85;
     }
 
-    /* Card body */
+    /* Card body area */
     .card-body {
       flex: 1;
       display: flex;
       position: relative;
+      z-index: 1;
       overflow: hidden;
     }
 
-    /* Left edge flag strip */
-    .flag-strip-left {
+    /* Left edge SA flag vertical strip */
+    .flag-strip-v {
       width: 12px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
     }
-    .flag-strip-left .band { flex: 1; }
+    .flag-strip-v .fsb { flex: 1; }
 
-    /* Fields section */
-    .card-fields {
-      flex: 1;
-      padding: 10px 8px 8px 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
-    .field-row { margin-bottom: 1px; }
-    .field-label {
-      color: #ffb612;
-      font-size: 7.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: block;
-      line-height: 1.1;
-    }
-    .field-value {
-      color: #ffffff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      line-height: 1.3;
-      display: block;
-    }
-    .id-number-value {
-      font-size: 13px;
-      letter-spacing: 2px;
-      color: #ffdd77;
-    }
-
-    /* Right side: photo + crest */
-    .card-right {
-      width: 25%;
+    /* Photo area */
+    .photo-col {
+      width: 108px;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 8px 10px 8px 4px;
+      padding: 10px 8px 8px 10px;
       gap: 6px;
     }
     .photo-box {
       width: 90px;
-      height: 115px;
-      background: #c8c8c8;
-      border: 2px solid #ffffff;
+      height: 110px;
+      background: linear-gradient(160deg, #c8c8c8, #b0b0b0);
+      border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 2px;
       flex-shrink: 0;
     }
     .photo-label {
       font-size: 8px;
-      color: #555;
-      text-align: center;
+      color: rgba(80,80,80,0.9);
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
-    .crest-img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-    }
 
     /* Gold chip */
     .chip {
-      position: absolute;
-      bottom: 18px;
-      left: 28px;
-      width: 30px;
-      height: 22px;
-      background: linear-gradient(135deg, #b8860b, #ffdf00, #b8860b, #daa520);
+      width: 32px;
+      height: 24px;
+      background: linear-gradient(145deg, #b8860b, #f5d060, #b8860b, #d4a820);
       border-radius: 4px;
       border: 1px solid #8b6914;
-      box-shadow: inset 0 1px 2px rgba(255,255,200,0.5);
+      box-shadow: inset 0 1px 2px rgba(255,235,150,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .chip::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 16px;
+      border: 1px solid rgba(139,105,20,0.7);
+      border-radius: 2px;
+      background: linear-gradient(180deg, #d4a017, #b8870a);
     }
     .chip::after {
       content: '';
@@ -240,38 +270,98 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 18px;
-      height: 12px;
-      border: 1px solid #8b6914;
-      border-radius: 2px;
-      background: linear-gradient(180deg, #e6c84a, #c8a000);
+      width: 12px;
+      height: 8px;
+      border: 1px solid rgba(139,105,20,0.5);
+      border-radius: 1px;
+      background: linear-gradient(90deg, #c09010, #e8c040, #c09010);
     }
 
-    /* Bottom flag strip */
-    .flag-strip-bottom {
+    /* Data fields column */
+    .data-col {
+      flex: 1;
+      padding: 9px 10px 6px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    .field-row {
+      margin-bottom: 1px;
+    }
+    .field-label {
+      color: #FFB612;
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      display: block;
+      line-height: 1.1;
+      opacity: 0.9;
+    }
+    .field-value {
+      color: #ffffff;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      line-height: 1.25;
+      display: block;
+    }
+    .field-value-sm { font-size: 9.5px; }
+
+    /* ID Number — large gold */
+    .id-number-row {
+      margin-top: 2px;
+      padding: 4px 6px;
+      background: rgba(0,0,0,0.25);
+      border-left: 2px solid #FFB612;
+      border-radius: 1px;
+    }
+    .id-number-label {
+      color: #FFB612;
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      opacity: 0.9;
+    }
+    .id-number-value {
+      color: #FFD966;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      font-family: 'Courier New', monospace;
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* Bottom horizontal SA flag strip */
+    .flag-strip-h {
       width: 100%;
-      height: 6px;
+      height: 7px;
       display: flex;
       flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
-    .flag-strip-bottom .band { flex: 1; }
+    .flag-strip-h .fsb { flex: 1; }
 
-    /* ===== BACK FACE ===== */
+    /* ═══════════════════════════════
+       BACK FACE
+    ═══════════════════════════════ */
     .card-back {
-      background: #ffffff;
+      background: #fafaf8;
       transform: rotateY(180deg);
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
     }
-    .back-tint {
+    /* Light green tint watermark on back */
+    .back-watermark {
       position: absolute;
       inset: 0;
-      background: #e8f4ed;
-      opacity: 0.35;
+      background:
+        radial-gradient(ellipse 200px 150px at 50% 50%, rgba(0,102,51,0.05) 0%, transparent 70%);
       pointer-events: none;
     }
+
     .back-content {
       position: relative;
       z-index: 1;
@@ -279,188 +369,285 @@
       flex-direction: column;
       height: 100%;
     }
-    .back-top-bar {
+
+    .back-header {
       background: #003c28;
-      padding: 5px 12px;
-      text-align: center;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #FFB612;
+      flex-shrink: 0;
+    }
+    .back-header-text {
       color: #fff;
       font-size: 8px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.7px;
       text-transform: uppercase;
-      border-bottom: 2px solid #ffb612;
     }
-    .back-crest-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 0 3px;
-    }
-    .back-crest-img {
-      width: 36px;
-      height: 36px;
+    .back-crest {
+      width: 30px;
+      height: 30px;
       object-fit: contain;
-    }
-    /* Barcode simulation */
-    .barcode-area {
-      margin: 5px 10px;
-      height: 48px;
-      background: repeating-linear-gradient(
-        to right,
-        #000 0px, #000 2px,
-        #fff 2px, #fff 4px,
-        #000 4px, #000 7px,
-        #fff 7px, #fff 9px,
-        #000 9px, #000 11px,
-        #fff 11px, #fff 14px,
-        #000 14px, #000 15px,
-        #fff 15px, #fff 18px,
-        #000 18px, #000 21px,
-        #fff 21px, #fff 22px,
-        #000 22px, #000 24px,
-        #fff 24px, #fff 27px,
-        #000 27px, #000 29px,
-        #fff 29px, #fff 31px,
-        #000 31px, #000 33px,
-        #fff 33px, #fff 36px,
-        #000 36px, #000 38px,
-        #fff 38px, #fff 40px
-      );
-      border-radius: 2px;
-    }
-    .back-boxes-row {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 6px 12px;
-    }
-    .fp-box {
-      width: 70px;
-      height: 80px;
-      background: #ddd;
-      border: 2px dashed #999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      border-radius: 3px;
-    }
-    .fp-box span {
-      font-size: 8px;
-      color: #666;
-      text-align: center;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .qr-box {
-      width: 70px;
-      height: 80px;
-      background: #fff;
-      border: 2px solid #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      border-radius: 3px;
-    }
-    .qr-box span {
-      font-size: 7px;
-      color: #333;
-      text-align: center;
-      font-family: 'Courier New', monospace;
-      word-break: break-all;
-    }
-    .back-validity {
-      text-align: center;
-      font-size: 8.5px;
-      color: #666;
-      padding: 6px 12px;
-      border-top: 1px solid #ccc;
-      margin-top: auto;
-    }
-    .flag-watermark {
-      position: absolute;
-      bottom: 14px;
-      right: 14px;
-      width: 60px;
-      opacity: 0.08;
-      pointer-events: none;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
     }
 
-    /* Hint + button */
-    .flip-hint {
+    /* PDF417 barcode simulation */
+    .barcode-wrap {
+      padding: 6px 12px;
+    }
+    .barcode-label {
+      font-size: 7px;
       color: #aaa;
-      font-size: 12px;
-      margin-top: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .barcode-pdf {
+      height: 44px;
+      background: repeating-linear-gradient(
+        to right,
+        #000 0px, #000 1px,
+        #fff 1px, #fff 3px,
+        #000 3px, #000 5px,
+        #fff 5px, #fff 6px,
+        #000 6px, #000 9px,
+        #fff 9px, #fff 10px,
+        #000 10px, #000 12px,
+        #fff 12px, #fff 15px,
+        #000 15px, #000 17px,
+        #fff 17px, #fff 18px,
+        #000 18px, #000 20px,
+        #fff 20px, #fff 23px,
+        #000 23px, #000 26px,
+        #fff 26px, #fff 27px,
+        #000 27px, #000 29px,
+        #fff 29px, #fff 32px,
+        #000 32px, #000 33px,
+        #fff 33px, #fff 36px,
+        #000 36px, #000 38px,
+        #fff 38px, #fff 39px,
+        #000 39px, #000 41px,
+        #fff 41px, #fff 44px,
+        #000 44px, #000 46px,
+        #fff 46px, #fff 47px
+      );
+      border: 1px solid #ccc;
+      border-radius: 1px;
+    }
+
+    /* Fingerprint + QR row */
+    .back-boxes {
+      display: flex;
+      gap: 14px;
+      padding: 6px 12px;
+      justify-content: center;
+    }
+    .fp-box {
+      width: 68px;
+      height: 82px;
+      background: #f0f0f0;
+      border: 1.5px dashed #aaa;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .fp-icon {
+      width: 36px;
+      height: 36px;
+      position: relative;
+    }
+    .fp-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 16px 20px at center, transparent 8px, #bbb 8px, #bbb 10px, transparent 10px),
+        radial-gradient(ellipse 24px 28px at center, transparent 11px, #bbb 11px, #bbb 13px, transparent 13px),
+        radial-gradient(ellipse 32px 36px at center, transparent 14px, #ccc 14px, #ccc 16px, transparent 16px);
+      border-radius: 50%;
+    }
+    .fp-box span, .qr-box span {
+      font-size: 7px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-weight: 700;
       text-align: center;
     }
+
+    /* QR code CSS simulation */
+    .qr-box {
+      width: 68px;
+      height: 82px;
+      background: #fff;
+      border: 1.5px solid #333;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .qr-grid {
+      width: 42px;
+      height: 42px;
+      background:
+        linear-gradient(#000 0%, #000 100%) 0 0 / 12px 12px no-repeat,
+        linear-gradient(#000 0%, #000 100%) 30px 0 / 12px 12px no-repeat,
+        linear-gradient(#000 0%, #000 100%) 0 30px / 12px 12px no-repeat,
+        repeating-linear-gradient(90deg, #000 0px, #000 3px, #fff 3px, #fff 6px) 0 14px / 42px 3px no-repeat,
+        repeating-linear-gradient(90deg, #fff 0px, #fff 3px, #000 3px, #000 6px) 0 20px / 42px 3px no-repeat,
+        repeating-linear-gradient(90deg, #000 0px, #000 3px, #fff 3px, #fff 6px) 0 26px / 42px 3px no-repeat,
+        #fff;
+      border: 1px solid #333;
+    }
+    .qr-box .qr-id-text {
+      font-size: 6px;
+      color: #444;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0;
+      text-align: center;
+      word-break: break-all;
+      padding: 0 3px;
+    }
+
+    /* Validity footer */
+    .back-validity {
+      margin-top: auto;
+      padding: 6px 14px;
+      background: rgba(0,60,40,0.06);
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      color: #555;
+    }
+    .back-validity strong { color: #003c28; }
+
+    /* Back flag strip bottom */
+    .back-flag-strip {
+      height: 6px;
+      display: flex;
+      flex-shrink: 0;
+    }
+    .back-flag-strip .fsb { flex: 1; }
+
+    /* ── BELOW CARD ── */
+    .flip-hint {
+      color: #667788;
+      font-size: 11.5px;
+      margin-top: 12px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
     .back-btn-wrap {
-      margin-top: 32px;
+      margin-top: 30px;
       text-align: center;
     }
     .back-btn {
       display: inline-block;
-      background: #003c28;
-      color: #ffb612;
-      border: 2px solid #ffb612;
-      padding: 10px 28px;
+      background: #002244;
+      color: #FFB612;
+      border: 2px solid #FFB612;
+      padding: 10px 30px;
       font-size: 13px;
       font-weight: 700;
       text-decoration: none;
-      border-radius: 3px;
+      border-radius: 4px;
       letter-spacing: 0.5px;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
-    .back-btn:hover { background: #ffb612; color: #003c28; }
+    .back-btn:hover { background: #FFB612; color: #002244; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: #111820;
+      color: #556677;
+      text-align: center;
+      padding: 18px;
+      font-size: 12px;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
 
-  <nav class="nav-header">
-    <a href="/" class="nav-logo">eDigital</a>
-    <div class="nav-links">
-      <a href="/dashboard/">Dashboard</a>
-      <a href="/logout/">Logout</a>
+  <!-- SITE HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/dashboard/" class="logo">eDigital</a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+          <li><a href="/logout/" class="nav-link">Logout</a></li>
+        </ul>
+      </nav>
     </div>
-  </nav>
+  </header>
 
   <div class="page-wrapper">
 
-    <div class="page-title">South African Identity Document</div>
-    <div class="page-subtitle">Department of Home Affairs / Departement van Binnelandse Sake</div>
+    <div class="page-title">South African Smart ID Card</div>
+    <div class="page-subtitle">Department of Home Affairs &mdash; Departement van Binnelandse Sake</div>
 
-    <div class="badge-row">
+    <!-- STATUS BAR -->
+    <div class="status-bar">
       {% if is_verified %}
         <span class="badge badge-verified">Verified</span>
       {% else %}
         <span class="badge badge-unverified">Unverified</span>
       {% endif %}
       <span class="badge badge-encrypted">Encrypted</span>
+      <span class="badge badge-status">{{ document.get_status_display }}</span>
     </div>
 
+    <!-- FLIP SCENE -->
     <div class="flip-scene" title="Hover to flip card">
       <div class="flip-card">
 
-        <!-- FRONT -->
+        <!-- ════ FRONT ════ -->
         <div class="card-face card-front">
-          <div class="card-top-bar">
-            <span class="left-text">Republic of South Africa</span>
-            <span class="right-text">Identity Card / Identiteitskaart</span>
+
+          <!-- Republic name header strip -->
+          <div class="front-header">
+            <div class="front-header-left">
+              <span class="republic-name">Republic of South Africa</span>
+              <span class="republic-name-sub">Republiek van Suid-Afrika &nbsp;/&nbsp; iRiphabhulikhi yaseNingizimu Afrika</span>
+            </div>
+            <img class="front-header-crest"
+                 src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
+                 alt="RSA Coat of Arms">
           </div>
 
           <div class="card-body">
-            <div class="flag-strip-left">
-              <div class="band" style="background:#007a4d;"></div>
-              <div class="band" style="background:#000000;"></div>
-              <div class="band" style="background:#ffb612;"></div>
-              <div class="band" style="background:#007a4d;"></div>
-              <div class="band" style="background:#ffffff;"></div>
-              <div class="band" style="background:#002395;"></div>
-              <div class="band" style="background:#e03c31;"></div>
+
+            <!-- Left flag strip (6 SA flag colours top to bottom) -->
+            <div class="flag-strip-v">
+              <div class="fsb" style="background:#000000;"></div>
+              <div class="fsb" style="background:#FFB612;"></div>
+              <div class="fsb" style="background:#007A4D;"></div>
+              <div class="fsb" style="background:#ffffff;"></div>
+              <div class="fsb" style="background:#E03C31;"></div>
+              <div class="fsb" style="background:#002395;"></div>
             </div>
 
-            <div class="card-fields">
+            <!-- Photo + chip -->
+            <div class="photo-col">
+              <div class="photo-box">
+                <span class="photo-label">Photo</span>
+              </div>
+              <div class="chip"></div>
+            </div>
+
+            <!-- Data fields -->
+            <div class="data-col">
               <div class="field-row">
                 <span class="field-label">Surname / Van</span>
                 <span class="field-value">{{ user.last_name|upper }}</span>
@@ -471,94 +658,104 @@
               </div>
               <div class="field-row">
                 <span class="field-label">Sex / Geslag</span>
-                <span class="field-value">Male / Man</span>
+                <span class="field-value field-value-sm">M &mdash; Male / Man</span>
               </div>
               <div class="field-row">
                 <span class="field-label">Date of Birth / Geboortedatum</span>
-                <span class="field-value">{{ user.date_of_birth|date:"d M Y"|default:"—" }}</span>
+                <span class="field-value">{{ user.date_of_birth|date:"Y-m-d"|default:"&mdash;" }}</span>
               </div>
               <div class="field-row">
-                <span class="field-label">Country of Birth</span>
-                <span class="field-value">South Africa</span>
+                <span class="field-label">Country of Birth / Geboorteland</span>
+                <span class="field-value field-value-sm">ZAF &mdash; South Africa</span>
               </div>
               <div class="field-row">
-                <span class="field-label">Citizenship</span>
-                <span class="field-value">South African Citizen</span>
+                <span class="field-label">Citizenship / Burgerskap</span>
+                <span class="field-value field-value-sm">South African Citizen</span>
               </div>
-              <div class="field-row">
-                <span class="field-label">Identity Number</span>
-                <span class="field-value id-number-value">
-                  {% if smart_id %}{{ smart_id.id_number }}{% else %}{{ document.name|upper }}{% endif %}
-                </span>
+
+              <div class="id-number-row">
+                <span class="id-number-label">Identity Number / Identiteitsnommer</span>
+                <span class="id-number-value">{% with uid=user.smart_id %}{% if uid %}{{ uid.id_number }}{% else %}{{ document.name }}{% endif %}{% endwith %}</span>
               </div>
             </div>
 
-            <div class="card-right">
-              <div class="photo-box">
-                <span class="photo-label">Photograph</span>
-              </div>
-              <img class="crest-img"
-                   src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
-                   alt="RSA Coat of Arms">
-            </div>
+          </div><!-- end card-body -->
 
-            <div class="chip"></div>
+          <!-- Bottom horizontal flag strip -->
+          <div class="flag-strip-h">
+            <div class="fsb" style="background:#E03C31;"></div>
+            <div class="fsb" style="background:#002395;"></div>
+            <div class="fsb" style="background:#ffffff;"></div>
+            <div class="fsb" style="background:#007A4D;"></div>
+            <div class="fsb" style="background:#FFB612;"></div>
+            <div class="fsb" style="background:#000000;"></div>
           </div>
 
-          <div class="flag-strip-bottom">
-            <div class="band" style="background:#e03c31;"></div>
-            <div class="band" style="background:#002395;"></div>
-            <div class="band" style="background:#ffffff;"></div>
-            <div class="band" style="background:#007a4d;"></div>
-            <div class="band" style="background:#ffb612;"></div>
-            <div class="band" style="background:#000000;"></div>
-            <div class="band" style="background:#007a4d;"></div>
-          </div>
         </div><!-- end card-front -->
 
-        <!-- BACK -->
+        <!-- ════ BACK ════ -->
         <div class="card-face card-back">
-          <div class="back-tint"></div>
+          <div class="back-watermark"></div>
           <div class="back-content">
-            <div class="back-top-bar">
-              Department of Home Affairs / Departement van Binnelandse Sake
-            </div>
-            <div class="back-crest-row">
-              <img class="back-crest-img"
+
+            <div class="back-header">
+              <div class="back-header-text">Department of Home Affairs &mdash; Departement van Binnelandse Sake</div>
+              <img class="back-crest"
                    src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
                    alt="RSA Coat of Arms">
             </div>
-            <div class="barcode-area"></div>
-            <div class="back-boxes-row">
+
+            <!-- PDF417 barcode -->
+            <div class="barcode-wrap">
+              <div class="barcode-label">PDF417 Encoded Data</div>
+              <div class="barcode-pdf"></div>
+            </div>
+
+            <!-- Fingerprint + QR -->
+            <div class="back-boxes">
               <div class="fp-box">
+                <div class="fp-icon"></div>
                 <span>Fingerprint</span>
               </div>
               <div class="qr-box">
-                <span>QR CODE</span>
-                <span style="margin-top:4px; font-size:6px;">
-                  ID:{% if smart_id %}{{ smart_id.id_number }}{% else %}&mdash;{% endif %}
-                </span>
+                <div class="qr-grid"></div>
+                <span class="qr-id-text">{% with uid=user.smart_id %}{% if uid %}{{ uid.id_number }}{% else %}&mdash;{% endif %}{% endwith %}</span>
               </div>
             </div>
+
+            <!-- Validity -->
             <div class="back-validity">
-              Valid From: {{ document.issue_date|date:"d M Y" }}
-              &mdash;
-              Valid To: {{ document.expiration_date|date:"d M Y"|default:"No Expiry" }}
+              <span><strong>Valid From:</strong> {{ document.issue_date|date:"d M Y" }}</span>
+              <span><strong>Valid To:</strong> {{ document.expiration_date|date:"d M Y"|default:"No Expiry" }}</span>
             </div>
+
+            <!-- Back flag strip -->
+            <div class="back-flag-strip">
+              <div class="fsb" style="background:#000000;"></div>
+              <div class="fsb" style="background:#FFB612;"></div>
+              <div class="fsb" style="background:#007A4D;"></div>
+              <div class="fsb" style="background:#ffffff;"></div>
+              <div class="fsb" style="background:#E03C31;"></div>
+              <div class="fsb" style="background:#002395;"></div>
+            </div>
+
           </div>
-          <img class="flag-watermark" src="https://flagcdn.com/w80/za.png" alt="">
         </div><!-- end card-back -->
 
       </div><!-- end flip-card -->
     </div><!-- end flip-scene -->
 
-    <p class="flip-hint">Hover over the card to see the back side</p>
+    <p class="flip-hint">Hover over the card to see the back</p>
 
     <div class="back-btn-wrap">
       <a href="/dashboard/" class="back-btn">Back to Dashboard</a>
     </div>
 
-  </div>
+  </div><!-- end page-wrapper -->
+
+  <footer class="site-footer">
+    &copy; 2026 eDigital. All Rights Reserved.
+  </footer>
 
 </body>
 </html>

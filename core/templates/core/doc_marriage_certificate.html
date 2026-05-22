@@ -4,55 +4,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SA Marriage Certificate</title>
+  <title>SA Marriage Certificate &mdash; eDigital</title>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: Georgia, 'Times New Roman', serif;
-      background: #f5f0e8;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      background: #2a1a0a;
       min-height: 100vh;
       color: #222;
     }
 
-    /* NAV */
-    .nav-header {
-      background: #5c0000;
-      padding: 12px 24px;
+    /* ── SITE HEADER (sans-serif) ── */
+    .header {
+      background: linear-gradient(135deg, #002244, #003d73);
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 3px solid #c8a882;
-      font-family: Arial, Helvetica, sans-serif;
     }
-    .nav-logo {
-      color: #c8a882;
-      font-size: 22px;
+    .logo {
+      color: #FFB612;
+      font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: 1px;
       text-decoration: none;
+      letter-spacing: 1px;
     }
-    .nav-links a {
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+    }
+    .nav-link {
       color: #fff;
       text-decoration: none;
-      margin-left: 20px;
       font-size: 14px;
+      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 5px;
+      transition: background 0.2s;
     }
-    .nav-links a:hover { color: #c8a882; }
+    .nav-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-    /* PAGE */
+    /* ── PAGE ── */
     .page-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px 60px;
+      padding: 36px 20px 64px;
     }
 
-    /* BADGES */
-    .badge-row {
+    /* ── STATUS BAR ── */
+    .status-bar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 28px;
       flex-wrap: wrap;
       justify-content: center;
@@ -64,108 +80,163 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
-    .badge-verified   { background: #155724; color: #d4edda; border: 1px solid #28a745; }
-    .badge-unverified { background: #721c24; color: #f8d7da; border: 1px solid #dc3545; }
-    .badge-encrypted  { background: #856404; color: #fff3cd; border: 1px solid #c8a882; }
+    .badge-verified   { background: #0d3321; color: #6fcf97; border: 1px solid #27ae60; }
+    .badge-unverified { background: #3b0a0a; color: #f8a0a0; border: 1px solid #e03c31; }
+    .badge-encrypted  { background: #2e1f00; color: #FFB612; border: 1px solid #FFB612; }
+    .badge-status     { background: #1a2236; color: #90b8e0; border: 1px solid #4a6fa5; }
 
-    /* DOCUMENT */
-    .doc-area {
-      max-width: 720px;
+    /* ── DOCUMENT SHELL (double border frame) ── */
+    .doc-frame {
+      max-width: 740px;
       width: 100%;
-      background: #ffffff;
-      border: 5px double #8b0000;
-      outline: 3px solid #c8a882;
-      outline-offset: -11px;
-      border-radius: 3px;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.2);
-      padding: 50px;
+      /* Outer maroon border */
+      border: 4px solid #8b0000;
+      padding: 7px;
+      /* Ivory paper */
+      background: #c8a882;
+      box-shadow: 0 10px 48px rgba(0,0,0,0.5);
+      border-radius: 2px;
+    }
+    .doc-inner-frame {
+      border: 1.5px solid #c8a882;
+      background: #fdf6e3;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* TOP HEADER */
+    /* Subtle parchment texture overlay */
+    .doc-inner-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 300px 200px at 50% 50%, rgba(139,0,0,0.015) 0%, transparent 70%),
+        radial-gradient(ellipse 150px 100px at 20% 25%, rgba(200,168,130,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 150px 100px at 80% 75%, rgba(200,168,130,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 100px 150px at 15% 75%, rgba(139,0,0,0.012) 0%, transparent 70%),
+        radial-gradient(ellipse 100px 150px at 85% 25%, rgba(139,0,0,0.012) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .doc-content {
+      position: relative;
+      z-index: 1;
+      padding: 44px 50px 38px;
+    }
+
+    /* ── HEADER ── */
     .doc-header {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .doc-crest {
-      width: 64px;
-      height: 64px;
+      width: 66px;
+      height: 66px;
       object-fit: contain;
       margin-bottom: 10px;
     }
-    .doc-republic {
+    .doc-republic-en {
       color: #8b0000;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 5px;
+    }
+    .doc-republic-af {
+      color: #a05050;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-top: 3px;
     }
     .doc-dept {
-      color: #666;
+      color: #555;
       font-size: 11px;
       font-family: Arial, Helvetica, sans-serif;
+      margin-top: 6px;
       letter-spacing: 0.3px;
-      margin-bottom: 14px;
     }
-    .doc-rule-double {
+
+    /* Decorative double rule */
+    .rule-double {
       border: none;
-      border-top: 4px double #8b0000;
-      margin: 12px 0;
+      height: 5px;
+      margin: 14px 0;
+      position: relative;
     }
-    .doc-rule-thin {
+    .rule-double::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0; right: 0;
+      height: 2.5px;
+      background: linear-gradient(to right, transparent, #8b0000, #8b0000, transparent);
+    }
+    .rule-double::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #c8a882, #c8a882, transparent);
+    }
+    .rule-single {
       border: none;
-      border-top: 1px solid #c8a882;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #c8a882, #c8a882, transparent);
       margin: 10px 0;
     }
+
     .doc-cert-title {
       color: #8b0000;
       font-size: 28px;
       font-weight: 700;
       letter-spacing: 1px;
-      margin: 12px 0 6px;
+      margin-bottom: 4px;
     }
-    .doc-cert-subtitle {
+    .doc-cert-sub {
       color: #a05050;
       font-size: 14px;
       font-style: italic;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .doc-cert-act {
       color: #888;
-      font-size: 11px;
+      font-size: 10.5px;
       font-style: italic;
       font-family: Arial, Helvetica, sans-serif;
-      margin-bottom: 10px;
     }
 
-    /* PREAMBLE */
+    /* ── PREAMBLE ── */
     .doc-preamble {
       text-align: center;
       font-style: italic;
-      color: #444;
-      font-size: 13px;
-      line-height: 1.6;
-      margin: 16px 0;
-      padding: 12px;
-      background: #fdf8f0;
-      border-left: 3px solid #c8a882;
-      border-right: 3px solid #c8a882;
+      color: #4a2a18;
+      font-size: 12.5px;
+      line-height: 1.7;
+      margin: 18px 0;
+      padding: 14px 20px;
+      background: rgba(200,168,130,0.1);
+      border-top: 1px solid rgba(200,168,130,0.5);
+      border-bottom: 1px solid rgba(200,168,130,0.5);
     }
 
-    /* PARTIES */
+    /* ── PARTIES SECTION ── */
     .parties-section {
       display: flex;
       gap: 0;
       margin: 20px 0;
       border: 1px solid #c8a882;
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
     }
     .party-col {
       flex: 1;
       padding: 16px 20px;
+      background: rgba(255,255,255,0.4);
     }
     .party-col:first-child {
       border-right: 2px solid #c8a882;
@@ -175,18 +246,19 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       font-family: Arial, Helvetica, sans-serif;
-      margin-bottom: 12px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #c8a882;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid #c8a882;
+      text-align: center;
     }
     .pf-row {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .pf-label {
-      font-size: 9px;
-      color: #888;
+      font-size: 8.5px;
+      color: #9a7a5a;
       text-transform: uppercase;
       letter-spacing: 0.6px;
       display: block;
@@ -194,40 +266,46 @@
       margin-bottom: 2px;
     }
     .pf-value {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #111;
       display: block;
     }
+    .pf-value-mono {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
 
-    /* MARRIAGE DETAILS */
+    /* ── MARRIAGE DETAILS ── */
     .marriage-details {
-      background: #f9f5ef;
+      background: rgba(200,168,130,0.1);
       border: 1px solid #c8a882;
-      border-radius: 3px;
-      padding: 16px 20px;
+      border-radius: 2px;
+      padding: 18px 22px;
       margin: 20px 0;
     }
     .md-title {
       color: #8b0000;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       font-family: Arial, Helvetica, sans-serif;
-      margin-bottom: 12px;
-      padding-bottom: 6px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
       border-bottom: 1px solid #c8a882;
+      text-align: center;
     }
     .md-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px 24px;
+      gap: 10px 28px;
     }
     .md-item {}
     .md-label {
-      font-size: 9px;
-      color: #888;
+      font-size: 8.5px;
+      color: #9a7a5a;
       text-transform: uppercase;
       letter-spacing: 0.6px;
       display: block;
@@ -241,247 +319,324 @@
       display: block;
     }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     .doc-footer {
-      margin-top: 24px;
-      border-top: 1px solid #c8a882;
-      padding-top: 18px;
+      margin-top: 26px;
     }
-    .footer-seal-row {
+    .footer-rule-top {
+      border: none;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #8b0000, #8b0000, transparent);
+      margin-bottom: 22px;
+    }
+
+    .footer-seal-area {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 16px;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 20px;
     }
+
     .seal-placeholder {
-      width: 70px;
-      height: 70px;
+      width: 90px;
+      height: 90px;
       border: 2px dashed #8b0000;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      position: relative;
     }
-    .seal-placeholder span {
-      font-size: 8px;
-      color: #8b0000;
-      text-align: center;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .sig-lines {
-      flex: 1;
+    .seal-inner {
+      width: 70px;
+      height: 70px;
+      border: 1px solid rgba(139,0,0,0.3);
+      border-radius: 50%;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+    .seal-inner span {
+      font-size: 8px;
+      color: #8b0000;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .sig-lines-col {
+      display: flex;
+      gap: 28px;
+    }
+    .sig-block {
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
     }
     .sig-line {
-      border-top: 1px solid #aaa;
+      border-top: 1px solid #888;
       padding-top: 6px;
-      font-size: 11px;
+      font-size: 10.5px;
       color: #333;
       font-family: Arial, Helvetica, sans-serif;
     }
+    .sig-subtitle {
+      font-size: 9px;
+      color: #888;
+      font-style: italic;
+      font-family: Arial, Helvetica, sans-serif;
+      margin-top: 2px;
+    }
+
     .footer-date {
       text-align: center;
       font-size: 12px;
       color: #555;
       font-family: Arial, Helvetica, sans-serif;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
+    .footer-date strong { color: #8b0000; }
+
     .footer-warning {
       text-align: center;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
       color: #8b0000;
       font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px;
+      border: 1px solid rgba(139,0,0,0.25);
+      background: rgba(139,0,0,0.04);
+      border-radius: 2px;
     }
 
     .back-btn-wrap {
-      margin-top: 32px;
+      margin-top: 28px;
       text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
     }
     .back-btn {
       display: inline-block;
       background: #8b0000;
       color: #fff;
       border: 2px solid #8b0000;
-      padding: 10px 28px;
+      padding: 10px 30px;
       font-size: 13px;
       font-weight: 700;
       text-decoration: none;
-      border-radius: 3px;
+      border-radius: 4px;
       letter-spacing: 0.5px;
-      font-family: Arial, Helvetica, sans-serif;
       transition: background 0.2s;
     }
-    .back-btn:hover { background: #5c0000; }
+    .back-btn:hover { background: #5c0000; border-color: #5c0000; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: #140a00;
+      color: #665544;
+      text-align: center;
+      padding: 18px;
+      font-size: 12px;
+      font-family: Arial, Helvetica, sans-serif;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
 
-  <nav class="nav-header">
-    <a href="/" class="nav-logo">eDigital</a>
-    <div class="nav-links">
-      <a href="/dashboard/">Dashboard</a>
-      <a href="/logout/">Logout</a>
+  <!-- SITE HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/dashboard/" class="logo">eDigital</a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+          <li><a href="/logout/" class="nav-link">Logout</a></li>
+        </ul>
+      </nav>
     </div>
-  </nav>
+  </header>
 
   <div class="page-wrapper">
 
-    <div class="badge-row">
+    <!-- STATUS BAR -->
+    <div class="status-bar">
       {% if is_verified %}
         <span class="badge badge-verified">Verified</span>
       {% else %}
         <span class="badge badge-unverified">Unverified</span>
       {% endif %}
       <span class="badge badge-encrypted">Encrypted</span>
+      <span class="badge badge-status">{{ document.get_status_display }}</span>
     </div>
 
-    <div class="doc-area">
+    <!-- DOCUMENT -->
+    <div class="doc-frame">
+      <div class="doc-inner-frame">
+        <div class="doc-content">
 
-      <!-- TOP HEADER -->
-      <div class="doc-header">
-        <img class="doc-crest"
-             src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
-             alt="RSA Coat of Arms">
-        <div class="doc-republic">Republic of South Africa</div>
-        <div class="doc-dept">Department of Home Affairs</div>
-        <hr class="doc-rule-double">
-        <div class="doc-cert-title">Marriage Certificate</div>
-        <div class="doc-cert-subtitle">Huweliksertifikaat</div>
-        <div class="doc-cert-act">
-          Issued in terms of the Marriage Act 25 of 1961 / Uitgereik ingevolge die Huwelikswet 25 van 1961
-        </div>
-        <hr class="doc-rule-thin">
-      </div>
+          <!-- HEADER -->
+          <div class="doc-header">
+            <img class="doc-crest"
+                 src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
+                 alt="RSA Coat of Arms">
 
-      <!-- PREAMBLE -->
-      <div class="doc-preamble">
-        This is to certify that the undermentioned persons were lawfully united in marriage /
-        Hierby word gesertifiseer dat die ondergenoemde persone wettiglik in die huwelik verenig is
-      </div>
+            <div class="doc-republic-en">Republic of South Africa</div>
+            <div class="doc-republic-af">Republiek van Suid-Afrika</div>
 
-      <!-- PARTIES -->
-      <div class="parties-section">
-        <!-- HUSBAND -->
-        <div class="party-col">
-          <div class="party-heading">Husband / Man</div>
-          <div class="pf-row">
-            <span class="pf-label">Full Names</span>
-            <span class="pf-value">{{ user.first_name|upper }} {{ user.last_name|upper }}</span>
+            <div class="doc-dept">Department of Home Affairs &nbsp;&mdash;&nbsp; Departement van Binnelandse Sake</div>
+
+            <div class="rule-double"></div>
+
+            <div class="doc-cert-title">Marriage Certificate</div>
+            <div class="doc-cert-sub">Huweliksertifikaat</div>
+            <div class="doc-cert-act">Marriages Act, 1961 (Act No. 25 of 1961) &nbsp;/&nbsp; Huwelikswet, 1961</div>
+
+            <div class="rule-single"></div>
           </div>
-          <div class="pf-row">
-            <span class="pf-label">Identity Number</span>
-            <span class="pf-value">
-              {% with smart_id=user.smart_id %}
-                {% if smart_id %}{{ smart_id.id_number }}{% else %}9001150001082{% endif %}
-              {% endwith %}
+
+          <!-- PREAMBLE -->
+          <div class="doc-preamble">
+            This is to certify that the marriage solemnised between the parties named hereunder was registered
+            in accordance with the provisions of the Marriages Act, 1961.<br>
+            <span style="font-size:11px; color:#888;">
+              Hierby word gesertifiseer dat die huwelik wat tussen die ondergenoemde partye voltrek is,
+              geregistreer is ooreenkomstig die bepalings van die Huwelikswet, 1961.
             </span>
           </div>
-          <div class="pf-row">
-            <span class="pf-label">Date of Birth</span>
-            <span class="pf-value">{{ user.date_of_birth|date:"d M Y"|default:"15 May 1990" }}</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Status Before Marriage</span>
-            <span class="pf-value">Bachelor / Jongman</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Nationality</span>
-            <span class="pf-value">South African</span>
-          </div>
-        </div>
-        <!-- WIFE -->
-        <div class="party-col">
-          <div class="party-heading">Wife / Vrou</div>
-          <div class="pf-row">
-            <span class="pf-label">Full Names</span>
-            <span class="pf-value">SARAH JANE DOE</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Identity Number</span>
-            <span class="pf-value">9205200012086</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Date of Birth</span>
-            <span class="pf-value">20 May 1992</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Status Before Marriage</span>
-            <span class="pf-value">Spinster / Jongvrou</span>
-          </div>
-          <div class="pf-row">
-            <span class="pf-label">Nationality</span>
-            <span class="pf-value">South African</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- MARRIAGE DETAILS -->
-      <div class="marriage-details">
-        <div class="md-title">Marriage Details / Huweliksbesonderhede</div>
-        <div class="md-grid">
-          <div class="md-item">
-            <span class="md-label">Date of Marriage</span>
-            <span class="md-value">{{ document.issue_date|date:"d M Y" }}</span>
-          </div>
-          <div class="md-item">
-            <span class="md-label">Place of Marriage</span>
-            <span class="md-value">Johannesburg Magistrate's Court, Gauteng</span>
-          </div>
-          <div class="md-item">
-            <span class="md-label">Marriage Officer</span>
-            <span class="md-value">Rev. J. Smith (Minister of Religion)</span>
-          </div>
-          <div class="md-item">
-            <span class="md-label">Marriage Register No</span>
-            <span class="md-value">MC{{ document.issue_date|date:"Ymd" }}001</span>
-          </div>
-          <div class="md-item" style="grid-column: 1 / -1;">
-            <span class="md-label">Type of Marriage</span>
-            <span class="md-value">Civil / Burgerlik (Marriage Act, 1961)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOOTER -->
-      <div class="doc-footer">
-        <div class="footer-seal-row">
-          <div class="seal-placeholder">
-            <span>Official Seal</span>
-          </div>
-          <div class="sig-lines">
-            <div class="sig-line">
-              ___________________________<br>
-              Director-General: Home Affairs / Direkteur-Generaal: Binnelandse Sake
+          <!-- PARTIES -->
+          <div class="parties-section">
+            <!-- HUSBAND / MAN -->
+            <div class="party-col">
+              <div class="party-heading">Husband &nbsp;/&nbsp; Man</div>
+              <div class="pf-row">
+                <span class="pf-label">Full Names / Volle Name</span>
+                <span class="pf-value">{{ user.first_name }} {{ user.last_name }}</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Identity Number / Identiteitsnommer</span>
+                <span class="pf-value pf-value-mono">{% with uid=user.smart_id %}{% if uid %}{{ uid.id_number }}{% else %}&mdash;{% endif %}{% endwith %}</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Date of Birth / Geboortedatum</span>
+                <span class="pf-value">{{ user.date_of_birth|date:"d F Y"|default:"&mdash;" }}</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Status Before Marriage / Status voor Huwelik</span>
+                <span class="pf-value">Bachelor / Jongman</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Nationality / Nasionaliteit</span>
+                <span class="pf-value">South African</span>
+              </div>
             </div>
-            <div class="sig-line">
-              ___________________________<br>
-              Marriage Officer / Huweliksbeampte
+
+            <!-- WIFE / VROU -->
+            <div class="party-col">
+              <div class="party-heading">Wife &nbsp;/&nbsp; Vrou</div>
+              <div class="pf-row">
+                <span class="pf-label">Full Names / Volle Name</span>
+                <span class="pf-value">&mdash;</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Identity Number / Identiteitsnommer</span>
+                <span class="pf-value pf-value-mono">&mdash;</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Date of Birth / Geboortedatum</span>
+                <span class="pf-value">&mdash;</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Status Before Marriage / Status voor Huwelik</span>
+                <span class="pf-value">Spinster / Jongvrou</span>
+              </div>
+              <div class="pf-row">
+                <span class="pf-label">Nationality / Nasionaliteit</span>
+                <span class="pf-value">&mdash;</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="footer-date">
-          Date / Datum: {{ document.issue_date|date:"d M Y" }}
-        </div>
-        <div class="footer-warning">
-          This certificate is a legal document. Any alteration renders it invalid.
-        </div>
-      </div>
 
-    </div><!-- end doc-area -->
+          <!-- MARRIAGE DETAILS -->
+          <div class="marriage-details">
+            <div class="md-title">Marriage Details &nbsp;/&nbsp; Huweliksbesonderhede</div>
+            <div class="md-grid">
+              <div class="md-item">
+                <span class="md-label">Date of Marriage / Datum van Huwelik</span>
+                <span class="md-value">{{ document.issue_date|date:"d F Y" }}</span>
+              </div>
+              <div class="md-item">
+                <span class="md-label">Place of Marriage / Plek van Huwelik</span>
+                <span class="md-value">Johannesburg, Gauteng</span>
+              </div>
+              <div class="md-item">
+                <span class="md-label">Marriage Officer / Huweliksbeampte</span>
+                <span class="md-value">&mdash;</span>
+              </div>
+              <div class="md-item">
+                <span class="md-label">Certificate No / Sertifikaatno</span>
+                <span class="md-value">{{ document.name }}</span>
+              </div>
+              <div class="md-item" style="grid-column: 1 / -1;">
+                <span class="md-label">Type of Marriage / Soort Huwelik</span>
+                <span class="md-value">Civil / Burgerlik &mdash; Marriages Act, 1961</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="doc-footer">
+            <div class="footer-rule-top"></div>
+
+            <div class="footer-seal-area">
+              <div class="seal-placeholder">
+                <div class="seal-inner">
+                  <span>Official<br>Seal</span>
+                </div>
+              </div>
+
+              <div class="sig-lines-col">
+                <div class="sig-block">
+                  <div class="sig-line">_________________________</div>
+                  <div class="sig-subtitle">Marriage Officer / Huweliksbeampte</div>
+                </div>
+                <div class="sig-block">
+                  <div class="sig-line">_________________________</div>
+                  <div class="sig-subtitle">Registrar / Registrateur</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-date">
+              Date / Datum: <strong>{{ document.issue_date|date:"d F Y" }}</strong>
+            </div>
+
+            <div class="footer-warning">
+              This document remains the property of the Republic of South Africa &mdash;
+              Hierdie dokument bly die eiendom van die Republiek van Suid-Afrika
+            </div>
+          </div>
+
+        </div><!-- end doc-content -->
+      </div><!-- end doc-inner-frame -->
+    </div><!-- end doc-frame -->
 
     <div class="back-btn-wrap">
       <a href="/dashboard/" class="back-btn">Back to Dashboard</a>
     </div>
 
-  </div>
+  </div><!-- end page-wrapper -->
+
+  <footer class="site-footer">
+    &copy; 2026 eDigital. All Rights Reserved.
+  </footer>
 
 </body>
 </html>

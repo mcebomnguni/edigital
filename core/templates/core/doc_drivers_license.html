@@ -4,67 +4,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SA Driver's Licence</title>
+  <title>SA Driver's Licence &mdash; eDigital</title>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #1a2a1e;
+      background: #101c10;
       min-height: 100vh;
       color: #222;
     }
 
-    /* NAV */
-    .nav-header {
-      background: #1e6b35;
-      padding: 12px 24px;
+    /* ── SITE HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #002244, #003d73);
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 3px solid #ffb612;
     }
-    .nav-logo {
-      color: #ffb612;
-      font-size: 22px;
+    .logo {
+      color: #FFB612;
+      font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: 1px;
       text-decoration: none;
+      letter-spacing: 1px;
     }
-    .nav-links a {
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+    }
+    .nav-link {
       color: #fff;
       text-decoration: none;
-      margin-left: 20px;
       font-size: 14px;
+      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 5px;
+      transition: background 0.2s;
     }
-    .nav-links a:hover { color: #ffb612; }
+    .nav-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-    /* PAGE */
+    /* ── PAGE ── */
     .page-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px 60px;
-    }
-    .page-title {
-      color: #ffb612;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .page-subtitle {
-      color: #aaa;
-      font-size: 12px;
-      margin-bottom: 14px;
+      padding: 36px 20px 64px;
     }
 
-    /* BADGES */
-    .badge-row {
+    .page-title {
+      color: #FFB612;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    .page-subtitle {
+      color: #7a9a7a;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 28px;
       flex-wrap: wrap;
       justify-content: center;
@@ -75,39 +92,26 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
-    .badge-verified   { background: #155724; color: #d4edda; border: 1px solid #28a745; }
-    .badge-unverified { background: #721c24; color: #f8d7da; border: 1px solid #dc3545; }
-    .badge-encrypted  { background: #856404; color: #fff3cd; border: 1px solid #ffb612; }
+    .badge-verified   { background: #0d3321; color: #6fcf97; border: 1px solid #27ae60; }
+    .badge-unverified { background: #3b0a0a; color: #f8a0a0; border: 1px solid #e03c31; }
+    .badge-encrypted  { background: #2e1f00; color: #FFB612; border: 1px solid #FFB612; }
+    .badge-status     { background: #1a2236; color: #90b8e0; border: 1px solid #4a6fa5; }
 
-    /* Status badge variants */
-    .status-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 3px;
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .status-active   { background: #d4edda; color: #155724; border: 1px solid #28a745; }
-    .status-expired  { background: #f8d7da; color: #721c24; border: 1px solid #dc3545; }
-    .status-pending  { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
-
-    /* FLIP CARD */
+    /* ── FLIP CARD ── */
     .flip-scene {
       width: 520px;
       height: 330px;
-      perspective: 1200px;
-      cursor: pointer;
+      perspective: 1400px;
+      cursor: default;
     }
     .flip-card {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.75s ease;
+      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .flip-scene:hover .flip-card {
       transform: rotateY(180deg);
@@ -117,42 +121,53 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 14px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.05);
     }
 
-    /* ===== FRONT FACE ===== */
+    /* ══════════ FRONT FACE ══════════ */
     .card-front {
       background: #ffffff;
       display: flex;
       flex-direction: column;
     }
 
-    .dl-top-bar {
+    /* SA flag colour bar across the very top */
+    .dl-flag-bar {
       width: 100%;
-      height: 28px;
-      background: #1e6b35;
+      height: 8px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
       flex-shrink: 0;
     }
-    .dl-top-bar .left-text {
+    .dl-flag-bar .fb { flex: 1; }
+
+    /* Green title bar */
+    .dl-title-bar {
+      background: linear-gradient(135deg, #004d1f, #006633);
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      justify-content: space-between;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,182,18,0.3);
+    }
+    .dl-title-bar .left-text {
       color: #fff;
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
     }
-    .dl-top-bar .right-text {
-      color: #fff;
-      font-size: 8px;
+    .dl-title-bar .right-text {
+      color: rgba(255,255,255,0.7);
+      font-size: 7.5px;
       letter-spacing: 0.3px;
     }
 
-    /* Body */
+    /* Card body */
     .dl-body {
       flex: 1;
       display: flex;
@@ -160,74 +175,122 @@
       overflow: hidden;
     }
 
-    /* Left flag strip */
-    .flag-strip {
-      width: 8px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .flag-strip .band { flex: 1; }
-
-    /* Left section: photo + vehicle codes */
+    /* Left side: photo + vehicle codes */
     .dl-left {
-      width: 35%;
+      width: 36%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 6px 8px 10px;
-      border-right: 1px solid #e0e0e0;
+      padding: 10px 8px 8px 12px;
+      border-right: 1px solid #e0e4e0;
+      gap: 8px;
     }
+
+    /* DL number label top-left */
+    .dl-number-label {
+      font-size: 7px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      align-self: flex-start;
+    }
+    .dl-number-value {
+      font-size: 9px;
+      color: #006633;
+      font-weight: 700;
+      align-self: flex-start;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.5px;
+    }
+
     .dl-photo {
-      width: 80px;
-      height: 100px;
-      background: #d0d0d0;
-      border: 2px dashed #999;
+      width: 88px;
+      height: 112px;
+      background: linear-gradient(160deg, #c8c8c8, #b0b0b0);
+      border: 1.5px dashed #aaa;
+      border-radius: 3px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 3px;
-      margin-bottom: 8px;
+      gap: 4px;
+      flex-shrink: 0;
     }
     .dl-photo span {
       font-size: 9px;
-      color: #666;
+      color: #777;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    /* Vehicle codes grid */
+    .dl-photo .photo-sub {
+      font-size: 7px;
+      color: #999;
+      font-weight: 400;
+    }
+
+    /* Vehicle codes */
+    .vc-label {
+      font-size: 7px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
     .vehicle-codes {
       display: flex;
-      gap: 4px;
+      gap: 5px;
       flex-wrap: wrap;
       justify-content: center;
     }
     .vc-box {
-      width: 24px;
-      height: 24px;
-      border: 1px solid #1e6b35;
+      width: 26px;
+      height: 26px;
+      border: 1.5px solid #006633;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 10px;
       font-weight: 700;
-      color: #1e6b35;
-      border-radius: 2px;
+      color: #006633;
+      border-radius: 3px;
+      background: rgba(0,102,51,0.05);
+    }
+    .vc-box-active {
+      background: #006633;
+      color: #fff;
     }
 
-    /* Right section: data fields */
+    /* Right side: data fields */
     .dl-right {
       flex: 1;
-      padding: 8px 10px 8px 10px;
+      padding: 8px 12px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .dl-right-title {
+      color: #006633;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #c0dcc0;
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+    }
+
+    .dl-fields-grid {
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      position: relative;
     }
+
     .dl-field-row { }
     .dl-field-label {
-      font-size: 8px;
+      font-size: 7px;
       color: #888;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -241,67 +304,126 @@
       display: block;
       line-height: 1.3;
     }
-
-    /* SA flag bottom-right */
-    .dl-flag {
-      position: absolute;
-      bottom: 8px;
-      right: 10px;
-      width: 50px;
-      height: 33px;
-      opacity: 0.85;
-      object-fit: contain;
+    .dl-field-value-mono {
+      font-family: 'Courier New', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.5px;
     }
 
-    /* ===== BACK FACE ===== */
+    /* Status badge */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-active   { background: #e6f7ee; color: #006633; border: 1px solid #27ae60; }
+    .status-expired  { background: #fde8e8; color: #8b0000; border: 1px solid #e03c31; }
+    .status-pending  { background: #fff8e1; color: #7a5c00; border: 1px solid #FFB612; }
+
+    /* SA flag at bottom right (CSS gradient) */
+    .dl-flag-corner {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 48px;
+      height: 32px;
+      background:
+        linear-gradient(
+          to bottom,
+          #009B77 0%, #009B77 16.6%,
+          #000 16.6%, #000 33.3%,
+          #FFB612 33.3%, #FFB612 50%,
+          #007A4D 50%, #007A4D 66.6%,
+          #fff 66.6%, #fff 83.3%,
+          #002395 83.3%, #002395 100%
+        );
+      opacity: 0.7;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+    }
+    /* Triangle overlay for SA flag "Y" shape approximation */
+    .dl-flag-corner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        #E03C31 0%, #E03C31 33%,
+        transparent 33%
+      );
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+    }
+
+    /* ══════════ BACK FACE ══════════ */
     .card-back {
       background: #ffffff;
       transform: rotateY(180deg);
       display: flex;
       flex-direction: column;
     }
-    .dl-back-top-bar {
-      width: 100%;
-      height: 28px;
-      background: #1e6b35;
+
+    .dl-back-flag-bar {
+      height: 8px;
       display: flex;
-      align-items: center;
-      justify-content: center;
       flex-shrink: 0;
     }
-    .dl-back-top-bar span {
+    .dl-back-flag-bar .fb { flex: 1; }
+
+    .dl-back-header {
+      background: linear-gradient(135deg, #004d1f, #006633);
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,182,18,0.3);
+    }
+    .dl-back-header-text {
       color: #fff;
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
+    .dl-back-crest {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
     .dl-back-body {
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 10px 20px;
+      padding: 8px 18px 10px;
+      gap: 6px;
     }
-    .dl-back-crest {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      margin-bottom: 4px;
-    }
+
     .dl-back-republic {
-      color: #1e6b35;
-      font-size: 11px;
+      color: #006633;
+      font-size: 10px;
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
     }
-    /* Barcode */
+
+    .dl-act {
+      text-align: center;
+      font-size: 8px;
+      color: #555;
+      font-style: italic;
+    }
+
+    /* Barcode simulation */
     .dl-barcode {
-      width: 100%;
-      height: 40px;
-      margin-bottom: 10px;
+      height: 36px;
       background: repeating-linear-gradient(
         to right,
         #000 0px, #000 2px,
@@ -309,204 +431,297 @@
         #000 3px, #000 6px,
         #fff 6px, #fff 8px,
         #000 8px, #000 9px,
-        #fff 9px, #fff 11px,
-        #000 11px, #000 14px,
-        #fff 14px, #fff 16px,
-        #000 16px, #000 17px,
-        #fff 17px, #fff 20px,
-        #000 20px, #000 22px,
-        #fff 22px, #fff 24px,
-        #000 24px, #000 26px,
-        #fff 26px, #fff 29px,
+        #fff 9px, #fff 12px,
+        #000 12px, #000 14px,
+        #fff 14px, #fff 15px,
+        #000 15px, #000 18px,
+        #fff 18px, #fff 21px,
+        #000 21px, #000 22px,
+        #fff 22px, #fff 25px,
+        #000 25px, #000 27px,
+        #fff 27px, #fff 29px,
         #000 29px, #000 31px,
-        #fff 31px, #fff 32px
+        #fff 31px, #fff 34px,
+        #000 34px, #000 36px,
+        #fff 36px, #fff 37px
       );
       border-radius: 2px;
     }
-    .dl-act-notice {
-      font-style: italic;
-      color: #888;
-      font-size: 9px;
-      text-align: center;
-      margin-bottom: 8px;
+
+    /* Vehicle codes table on back */
+    .dl-codes-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5px;
     }
+    .dl-codes-table th {
+      background: #006633;
+      color: #fff;
+      padding: 3px 6px;
+      text-align: left;
+      font-size: 7.5px;
+      letter-spacing: 0.3px;
+    }
+    .dl-codes-table td {
+      padding: 3px 6px;
+      border: 1px solid #e0e0e0;
+      color: #333;
+      font-size: 8px;
+      vertical-align: top;
+    }
+    .dl-codes-table tr:nth-child(even) td { background: #f5f9f5; }
+
     .dl-back-dates {
-      font-size: 9px;
-      color: #555;
       text-align: center;
+      font-size: 8.5px;
+      color: #555;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 6px;
     }
+    .dl-back-dates strong { color: #006633; }
 
     /* Hint */
     .flip-hint {
-      color: #aaa;
-      font-size: 12px;
-      margin-top: 14px;
+      color: #557755;
+      font-size: 11.5px;
+      margin-top: 12px;
       text-align: center;
     }
 
     .back-btn-wrap {
-      margin-top: 32px;
+      margin-top: 28px;
       text-align: center;
     }
     .back-btn {
       display: inline-block;
-      background: #1e6b35;
-      color: #ffb612;
-      border: 2px solid #ffb612;
-      padding: 10px 28px;
+      background: #004d1f;
+      color: #FFB612;
+      border: 2px solid #FFB612;
+      padding: 10px 30px;
       font-size: 13px;
       font-weight: 700;
       text-decoration: none;
-      border-radius: 3px;
+      border-radius: 4px;
       letter-spacing: 0.5px;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
-    .back-btn:hover { background: #ffb612; color: #1e6b35; }
+    .back-btn:hover { background: #FFB612; color: #004d1f; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: #080f08;
+      color: #445544;
+      text-align: center;
+      padding: 18px;
+      font-size: 12px;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
 
-  <nav class="nav-header">
-    <a href="/" class="nav-logo">eDigital</a>
-    <div class="nav-links">
-      <a href="/dashboard/">Dashboard</a>
-      <a href="/logout/">Logout</a>
+  <!-- SITE HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/dashboard/" class="logo">eDigital</a>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
+          <li><a href="/logout/" class="nav-link">Logout</a></li>
+        </ul>
+      </nav>
     </div>
-  </nav>
+  </header>
 
   <div class="page-wrapper">
 
-    <div class="page-title">South African Driver's Licence</div>
-    <div class="page-subtitle">Department of Transport / Departement van Vervoer</div>
+    <div class="page-title">Driver's Licence Card</div>
+    <div class="page-subtitle">Department of Transport &mdash; Departement van Vervoer &mdash; National Road Traffic Act, 1996</div>
 
-    <div class="badge-row">
+    <!-- STATUS BAR -->
+    <div class="status-bar">
       {% if is_verified %}
         <span class="badge badge-verified">Verified</span>
       {% else %}
         <span class="badge badge-unverified">Unverified</span>
       {% endif %}
       <span class="badge badge-encrypted">Encrypted</span>
+      <span class="badge badge-status">{{ document.get_status_display }}</span>
     </div>
 
+    <!-- FLIP SCENE -->
     <div class="flip-scene" title="Hover to flip card">
       <div class="flip-card">
 
-        <!-- FRONT -->
+        <!-- ════ FRONT ════ -->
         <div class="card-face card-front">
-          <div class="dl-top-bar">
-            <span class="left-text">South Africa / Suid-Afrika</span>
-            <span class="right-text">Driver's Licence / Bestuurderslisensie</span>
+
+          <!-- Top SA flag colour strip -->
+          <div class="dl-flag-bar">
+            <div class="fb" style="background:#E03C31;"></div>
+            <div class="fb" style="background:#002395;"></div>
+            <div class="fb" style="background:#ffffff;"></div>
+            <div class="fb" style="background:#007A4D;"></div>
+            <div class="fb" style="background:#FFB612;"></div>
+            <div class="fb" style="background:#000000;"></div>
+          </div>
+
+          <!-- Green title bar -->
+          <div class="dl-title-bar">
+            <span class="left-text">Republic of South Africa &mdash; Driver's Licence / Bestuurderslisensie</span>
+            <span class="right-text">National Road Traffic Act 93 of 1996</span>
           </div>
 
           <div class="dl-body">
-            <div class="flag-strip">
-              <div class="band" style="background:#007a4d;"></div>
-              <div class="band" style="background:#000000;"></div>
-              <div class="band" style="background:#ffb612;"></div>
-              <div class="band" style="background:#007a4d;"></div>
-              <div class="band" style="background:#ffffff;"></div>
-              <div class="band" style="background:#002395;"></div>
-              <div class="band" style="background:#e03c31;"></div>
-            </div>
 
+            <!-- Left panel -->
             <div class="dl-left">
-              <div class="dl-photo"><span>Photo</span></div>
+              <span class="dl-number-label">Licence No / Lisensieno</span>
+              <span class="dl-number-value">{{ document.name }}</span>
+
+              <div class="dl-photo">
+                <span>Photo</span>
+                <span class="photo-sub">Photograph</span>
+              </div>
+
+              <span class="vc-label">Vehicle Codes / Voertuigkodes</span>
               <div class="vehicle-codes">
-                <div class="vc-box">B</div>
+                <div class="vc-box vc-box-active">B</div>
+                <div class="vc-box vc-box-active">EB</div>
                 <div class="vc-box">C</div>
-                <div class="vc-box">EB</div>
+                <div class="vc-box">A</div>
               </div>
             </div>
 
+            <!-- Right panel: data -->
             <div class="dl-right">
-              <div class="dl-field-row">
-                <span class="dl-field-label">Surname / Van</span>
-                <span class="dl-field-value">{{ user.last_name|upper }}</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Initials</span>
-                <span class="dl-field-value">{{ user.first_name|first|upper }}.</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">ID Number</span>
-                <span class="dl-field-value">
-                  {% with smart_id=user.smart_id %}
-                    {% if smart_id %}{{ smart_id.id_number }}{% else %}9001150001082{% endif %}
-                  {% endwith %}
-                </span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Date of Birth</span>
-                <span class="dl-field-value">{{ user.date_of_birth|date:"Y-m-d"|default:"1990-05-15" }}</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Licence No</span>
-                <span class="dl-field-value">DL{{ document.issue_date|date:"Ymd" }}001</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Issued At</span>
-                <span class="dl-field-value">Johannesburg</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Valid From</span>
-                <span class="dl-field-value">{{ document.issue_date|date:"Y-m-d" }}</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Valid To</span>
-                <span class="dl-field-value">{{ document.expiration_date|date:"Y-m-d"|default:"—" }}</span>
-              </div>
-              <div class="dl-field-row">
-                <span class="dl-field-label">Status</span>
-                <span class="dl-field-value">
-                  {% if document.status == "active" or document.status == "approved" %}
-                    <span class="status-badge status-active">{{ document.status|upper }}</span>
-                  {% elif document.status == "expired" %}
-                    <span class="status-badge status-expired">{{ document.status|upper }}</span>
-                  {% else %}
-                    <span class="status-badge status-pending">{{ document.status|upper }}</span>
-                  {% endif %}
-                </span>
+              <div class="dl-right-title">Driver's Licence / Ryderslisensiee</div>
+
+              <div class="dl-fields-grid">
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Surname / Van</span>
+                  <span class="dl-field-value">{{ user.last_name|upper }}</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Initials / Voorletters</span>
+                  <span class="dl-field-value">{{ user.first_name|first|upper }}.</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">ID Number / Identiteitsnommer</span>
+                  <span class="dl-field-value dl-field-value-mono">{% with uid=user.smart_id %}{% if uid %}{{ uid.id_number }}{% else %}&mdash;{% endif %}{% endwith %}</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Date of Birth / Geboortedatum</span>
+                  <span class="dl-field-value">{{ user.date_of_birth|date:"Y-m-d"|default:"&mdash;" }}</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Issue Date / Datum van Uitreiking</span>
+                  <span class="dl-field-value">{{ document.issue_date|date:"Y-m-d" }}</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Expiry / Vervaldatum</span>
+                  <span class="dl-field-value">{{ document.expiration_date|date:"Y-m-d"|default:"&mdash;" }}</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">PrDP / PDP</span>
+                  <span class="dl-field-value">No</span>
+                </div>
+                <div class="dl-field-row">
+                  <span class="dl-field-label">Status</span>
+                  <span class="dl-field-value">
+                    {% if document.status == "active" or document.status == "approved" %}
+                      <span class="status-badge status-active">Active</span>
+                    {% elif document.status == "expired" %}
+                      <span class="status-badge status-expired">Expired</span>
+                    {% else %}
+                      <span class="status-badge status-pending">{{ document.get_status_display }}</span>
+                    {% endif %}
+                  </span>
+                </div>
               </div>
 
-              <img class="dl-flag"
-                   src="https://flagcdn.com/w80/za.png"
-                   alt="SA Flag">
+              <!-- SA flag corner (CSS) -->
+              <div class="dl-flag-corner"></div>
             </div>
+
           </div>
         </div><!-- end card-front -->
 
-        <!-- BACK -->
+        <!-- ════ BACK ════ -->
         <div class="card-face card-back">
-          <div class="dl-back-top-bar">
-            <span>Department of Transport / Departement van Vervoer</span>
+
+          <div class="dl-back-flag-bar">
+            <div class="fb" style="background:#000000;"></div>
+            <div class="fb" style="background:#FFB612;"></div>
+            <div class="fb" style="background:#007A4D;"></div>
+            <div class="fb" style="background:#ffffff;"></div>
+            <div class="fb" style="background:#E03C31;"></div>
+            <div class="fb" style="background:#002395;"></div>
           </div>
-          <div class="dl-back-body">
+
+          <div class="dl-back-header">
+            <div class="dl-back-header-text">Department of Transport &mdash; Republic of South Africa</div>
             <img class="dl-back-crest"
                  src="https://upload.wikimedia.org/wikipedia/commons/8/87/Coat_of_arms_of_South_Africa.svg"
                  alt="RSA Coat of Arms">
-            <div class="dl-back-republic">Republic of South Africa</div>
+          </div>
+
+          <div class="dl-back-body">
+            <div class="dl-back-republic">Republic of South Africa &mdash; Driver's Licence</div>
+            <div class="dl-act">Issued in terms of Section 18 of the National Road Traffic Act, 1996 (Act No. 93 of 1996)</div>
+
             <div class="dl-barcode"></div>
-            <div class="dl-act-notice">
-              This licence is issued in terms of the National Road Traffic Act
-            </div>
+
+            <table class="dl-codes-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Vehicle Description</th>
+                  <th>Restrictions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>B</strong></td>
+                  <td>Motor vehicle, GVM &le; 3 500 kg, not Code A or C</td>
+                  <td>&mdash;</td>
+                </tr>
+                <tr>
+                  <td><strong>EB</strong></td>
+                  <td>Motor vehicle, GVM &le; 3 500 kg (with trailer)</td>
+                  <td>&mdash;</td>
+                </tr>
+                <tr>
+                  <td><strong>C</strong></td>
+                  <td>Motor vehicle, GVM &gt; 3 500 kg</td>
+                  <td>Requires PrDP for public transport</td>
+                </tr>
+              </tbody>
+            </table>
+
             <div class="dl-back-dates">
-              Issue Date: {{ document.issue_date|date:"d M Y" }}
+              <strong>Issue Date:</strong> {{ document.issue_date|date:"d M Y" }}
               &nbsp;&nbsp;|&nbsp;&nbsp;
-              Expiry: {{ document.expiration_date|date:"d M Y"|default:"No Expiry" }}
+              <strong>Expiry:</strong> {{ document.expiration_date|date:"d M Y"|default:"No Expiry" }}
             </div>
           </div>
+
         </div><!-- end card-back -->
 
       </div><!-- end flip-card -->
     </div><!-- end flip-scene -->
 
-    <p class="flip-hint">Hover over the card to see the back side</p>
+    <p class="flip-hint">Hover over the card to see the back</p>
 
     <div class="back-btn-wrap">
       <a href="/dashboard/" class="back-btn">Back to Dashboard</a>
     </div>
 
-  </div>
+  </div><!-- end page-wrapper -->
+
+  <footer class="site-footer">
+    &copy; 2026 eDigital. All Rights Reserved.
+  </footer>
 
 </body>
 </html>
