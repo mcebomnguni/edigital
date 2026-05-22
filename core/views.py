@@ -379,6 +379,12 @@ def document_submission_report(request: HttpRequest) -> JsonResponse:
     }
     return JsonResponse(data)
 
+def user_logout(request):
+    from django.contrib.auth import logout as auth_logout
+    auth_logout(request)
+    return redirect('login')
+
+
 def contact(request):
     return render(request, 'core/contact.html')
 

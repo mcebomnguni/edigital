@@ -7,6 +7,7 @@ urlpatterns = [
     # Authentication and User Pages
     path('', views.user_login, name='home'),
     path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
     path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
